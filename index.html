@@ -1,1593 +1,1021 @@
 <!DOCTYPE html>
-<html lang="fr" dir="ltr" id="htmlRoot">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mawid — موعد</title>
+<title>Mawid موعد</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css">
 <style>
 :root {
-  --primary: #00b894;
-  --primary-dark: #00a381;
-  --primary-light: #e8f8f5;
-  --danger: #e17055;
-  --danger-light: #fdf0ed;
-  --warning: #fdcb6e;
-  --warning-light: #fffbf0;
-  --info: #74b9ff;
-  --dark: #1a1a2e;
-  --dark2: #16213e;
-  --text: #2d3436;
-  --text-light: #636e72;
-  --border: #e0e0e0;
-  --bg: #f8f9fa;
-  --white: #ffffff;
-  --shadow: 0 2px 20px rgba(0,0,0,0.08);
-  --shadow-lg: 0 8px 40px rgba(0,0,0,0.15);
-  --radius: 16px;
-  --radius-sm: 8px;
+  --vert: #1D9E75; --vert-f: #0F6E56; --vert-cl: #E1F5EE; --vert-tx: #085041;
+  --orange: #EF9F27; --orange-cl: #FAEEDA; --orange-tx: #854F0B;
+  --rouge: #E24B4A; --rouge-cl: #FCEBEB; --rouge-tx: #A32D2D;
+  --bleu-cl: #E6F1FB; --bleu-tx: #185FA5;
+  --fond: #ffffff; --fond2: #F5F5F3; --bord: #E0E0DC;
+  --texte: #1A1A1A; --texte2: #777;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-[dir="rtl"] { font-family:'Segoe UI','Arabic Typesetting',sans-serif; }
-
-.screen { display:none; min-height:100vh; }
-.screen.active { display:block; }
-#screen-login.active, #screen-blocked.active { display:flex; }
-
-/* LANG */
-.lang-switcher {
-  position:fixed; top:16px; right:16px; z-index:9999;
-  display:flex; background:rgba(255,255,255,0.15);
-  border:1px solid rgba(255,255,255,0.2); border-radius:24px;
-  overflow:hidden; backdrop-filter:blur(10px);
-}
-.lang-btn { padding:6px 14px; font-size:13px; font-weight:700; cursor:pointer; border:none; background:transparent; color:rgba(255,255,255,0.7); transition:all 0.2s; }
-.lang-btn.active { background:var(--primary); color:white; border-radius:24px; }
-
-/* LOGIN */
-#screen-login {
-  background:linear-gradient(135deg,var(--dark) 0%,var(--dark2) 100%);
-  flex-direction:column; align-items:center; justify-content:center; padding:40px 20px;
-}
-.login-card {
-  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
-  border-radius:var(--radius); padding:48px 40px; width:100%; max-width:420px;
-  animation:fadeUp 0.5s ease;
-}
-.logo-text { font-size:48px; font-weight:900; color:var(--primary); display:block; text-align:center; }
-.logo-ar { font-size:20px; color:rgba(255,255,255,0.5); display:block; text-align:center; direction:rtl; margin:4px 0 8px; }
-.logo-tag { font-size:13px; color:rgba(255,255,255,0.4); display:block; text-align:center; margin-bottom:32px; }
-.login-title { font-size:18px; font-weight:700; color:white; margin-bottom:24px; text-align:center; }
-.form-group { margin-bottom:18px; }
-.form-label { display:block; font-size:13px; font-weight:600; color:rgba(255,255,255,0.7); margin-bottom:8px; }
-.form-input, .form-select {
-  width:100%; padding:13px 16px;
-  background:rgba(255,255,255,0.08); border:1.5px solid rgba(255,255,255,0.15);
-  border-radius:10px; font-size:14px; color:white; font-family:inherit; transition:border-color 0.2s;
-}
-.form-input::placeholder { color:rgba(255,255,255,0.3); }
-.form-input:focus, .form-select:focus { outline:none; border-color:var(--primary); background:rgba(255,255,255,0.12); }
-.form-select option { background:var(--dark); color:white; }
-.login-error { background:rgba(225,112,85,0.15); border:1px solid rgba(225,112,85,0.3); color:#ff7675; padding:11px 14px; border-radius:8px; font-size:13px; margin-bottom:14px; display:none; text-align:center; }
-.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:13px 24px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; border:none; transition:all 0.2s; font-family:inherit; }
-.btn-full { width:100%; }
-.btn-primary { background:var(--primary); color:white; }
-.btn-primary:hover { background:var(--primary-dark); transform:translateY(-1px); }
-.btn-ghost { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.7); border:1px solid rgba(255,255,255,0.15); }
-.btn-ghost:hover { background:rgba(255,255,255,0.15); }
-.btn-ghost-dark { background:var(--bg); color:var(--text-light); border:1px solid var(--border); }
-.btn-ghost-dark:hover { background:var(--border); }
-.btn-danger { background:var(--danger); color:white; }
-.btn-sm { padding:8px 16px; font-size:13px; }
-.btn-lg { padding:15px 32px; font-size:15px; }
-.login-divider { text-align:center; color:rgba(255,255,255,0.3); font-size:13px; margin:16px 0; position:relative; }
-.login-divider::before, .login-divider::after { content:''; position:absolute; top:50%; width:42%; height:1px; background:rgba(255,255,255,0.1); }
-.login-divider::before { left:0; }
-.login-divider::after { right:0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+       background: var(--fond2); color: var(--texte); }
+#app { max-width: 820px; margin: 0 auto; background: var(--fond); min-height: 100vh; }
 
 /* TOPBAR */
-.topbar { background:white; border-bottom:1px solid var(--border); padding:0 20px; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:var(--shadow); }
-.topbar-logo { font-size:20px; font-weight:900; color:var(--primary); }
-.topbar-client { padding-left:14px; border-left:2px solid var(--border); }
-.topbar-client strong { font-size:14px; color:var(--text); display:block; }
-.topbar-client span { font-size:12px; color:var(--text-light); }
-.topbar-right { display:flex; align-items:center; gap:8px; }
-.topbar-badge { padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700; }
-.btn-back { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:7px 13px; font-size:13px; cursor:pointer; color:var(--text-light); transition:all 0.2s; font-family:inherit; font-weight:600; }
-.btn-back:hover { background:var(--border); }
+.topbar { display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 20px; border-bottom: 1px solid var(--bord); background: var(--fond);
+  position: sticky; top: 0; z-index: 10; }
+.logo { font-size: 22px; font-weight: 800; color: var(--vert); letter-spacing: -1px; }
+.logo span { font-size: 13px; color: var(--texte2); font-weight: 400; margin-left: 6px; }
 
-/* DASHBOARD */
-.dashboard-body { max-width:1100px; margin:0 auto; padding:24px 16px; }
-.alert-banner { border-radius:var(--radius); padding:16px 20px; margin-bottom:24px; display:flex; align-items:center; gap:14px; animation:fadeDown 0.4s ease; }
-.alert-trial { background:var(--warning-light); border:1px solid rgba(253,203,110,0.4); }
-.alert-danger { background:var(--danger-light); border:1px solid rgba(225,112,85,0.3); }
-.alert-success { background:var(--primary-light); border:1px solid rgba(0,184,148,0.3); }
-.alert-icon { font-size:26px; flex-shrink:0; }
-.alert-content { flex:1; }
-.alert-title { font-weight:700; font-size:14px; margin-bottom:2px; }
-.alert-desc { font-size:12px; color:var(--text-light); }
+/* BOUTONS */
+.btn { border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px;
+  cursor: pointer; font-weight: 600; display: inline-flex; align-items: center;
+  gap: 6px; font-family: inherit; transition: opacity .15s; }
+.btn:hover { opacity: .85; }
+.btn-vert { background: var(--vert); color: #fff; }
+.btn-gris { background: var(--fond2); border: 1px solid var(--bord); color: var(--texte2); }
+.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 6px; }
+.btn-ok { background: var(--vert-cl); color: var(--vert-tx); border: none; }
+.btn-non { background: var(--rouge-cl); color: var(--rouge-tx); border: none; }
 
-/* TABS */
-.tabs { display:flex; gap:3px; background:white; padding:5px; border-radius:14px; margin-bottom:20px; box-shadow:var(--shadow); overflow-x:auto; }
-.tab { flex:1; min-width:100px; padding:9px 6px; border:none; background:none; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; color:var(--text-light); transition:all 0.2s; text-align:center; white-space:nowrap; font-family:inherit; }
-.tab.active { background:var(--primary); color:white; box-shadow:0 2px 8px rgba(0,184,148,0.3); }
-.tab-content { display:none; }
-.tab-content.active { display:block; animation:fadeUp 0.3s ease; }
-
-/* CARD */
-.card { background:white; border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); margin-bottom:18px; }
-.card-title { font-size:16px; font-weight:700; color:var(--text); margin-bottom:18px; display:flex; align-items:center; gap:8px; }
+/* CONTENEUR */
+.page { padding: 20px; }
 
 /* STATS */
-.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin-bottom:20px; }
-.stat-card { background:white; border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); transition:transform 0.2s; }
-.stat-card:hover { transform:translateY(-3px); }
-.stat-icon { width:42px; height:42px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:19px; margin-bottom:12px; }
-.stat-value { font-size:28px; font-weight:900; color:var(--text); line-height:1; }
-.stat-label { font-size:12px; color:var(--text-light); font-weight:600; margin-top:4px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+.stat { background: var(--fond2); border-radius: 10px; padding: 12px; text-align: center; }
+.stat-num { font-size: 24px; font-weight: 800; color: var(--vert); }
+.stat-lbl { font-size: 11px; color: var(--texte2); margin-top: 2px; }
 
-/* FORM */
-.form-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; }
-.card .form-group { margin-bottom:14px; }
-.card .form-label { display:block; font-size:13px; font-weight:600; color:var(--text); margin-bottom:7px; }
-.card .form-input, .card .form-select { width:100%; padding:11px 14px; background:white; border:2px solid var(--border); border-radius:9px; font-size:14px; color:var(--text); font-family:inherit; transition:border-color 0.2s; }
-.card .form-input:focus, .card .form-select:focus { outline:none; border-color:var(--primary); }
-.card .form-input::placeholder { color:var(--text-light); }
+/* BANNIERES */
+.banniere { padding: 12px 18px; display: flex; align-items: center;
+  justify-content: space-between; gap: 12px; }
+.ban-essai { background: var(--orange-cl); border-left: 4px solid var(--orange); }
+.ban-urgent { background: var(--rouge-cl); border-left: 4px solid var(--rouge); }
+.ban-actif { background: var(--vert-cl); border-left: 4px solid var(--vert); }
+.ban-titre { font-size: 13px; font-weight: 700; }
+.ban-sub { font-size: 12px; margin-top: 2px; }
 
-/* TABLE */
-.table-wrap { overflow-x:auto; }
-table { width:100%; border-collapse:collapse; }
-thead th { background:var(--bg); padding:11px 14px; font-size:11px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; }
-tbody td { padding:13px 14px; font-size:13px; border-bottom:1px solid rgba(0,0,0,0.04); }
-tbody tr:last-child td { border-bottom:none; }
-tbody tr:hover { background:rgba(0,184,148,0.02); }
-.rdv-badge { padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700; display:inline-block; }
-.s-confirmed { background:#e8f8f5; color:#00b894; }
-.s-pending { background:#fffbf0; color:#e67e22; }
-.s-cancelled { background:#fdf0ed; color:#e17055; }
-.s-done { background:#f0f4ff; color:#6c5ce7; }
-.action-btn { background:none; border:1px solid var(--border); border-radius:6px; padding:4px 9px; cursor:pointer; font-size:12px; color:var(--text-light); transition:all 0.2s; margin-right:3px; font-family:inherit; }
-.action-btn:hover { background:var(--primary); color:white; border-color:var(--primary); }
-.action-btn.del:hover { background:var(--danger); border-color:var(--danger); }
+/* BADGES */
+.badge { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 600; white-space: nowrap; }
+.badge-confirme { background: var(--vert-cl); color: var(--vert-tx); }
+.badge-attente  { background: var(--orange-cl); color: var(--orange-tx); }
+.badge-fait     { background: var(--fond2); color: var(--texte2); border: 1px solid var(--bord); }
+.badge-annule   { background: var(--rouge-cl); color: var(--rouge-tx); }
+.badge-admin    { background: var(--bleu-cl); color: var(--bleu-tx); }
 
-/* WHATSAPP */
-.wa-log { background:#f0fdf4; border:1px solid rgba(0,184,148,0.2); border-radius:var(--radius); padding:18px; min-height:100px; }
-.wa-msg { display:flex; gap:10px; margin-bottom:14px; }
-.wa-icon { width:34px; height:34px; background:#25D366; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
-.wa-bubble { background:white; border-radius:12px 12px 12px 2px; padding:11px 14px; font-size:13px; line-height:1.7; box-shadow:0 1px 4px rgba(0,0,0,0.08); max-width:360px; white-space:pre-line; }
-.wa-time { font-size:11px; color:var(--text-light); margin-top:3px; }
+/* SECTEURS — icônes colorées */
+.icone-secteur { width: 36px; height: 36px; border-radius: 8px; display: flex;
+  align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.s-medical    { background: #E8F5E9; }
+.s-bancaire   { background: #E3F2FD; }
+.s-admin      { background: #FFF3E0; }
+.s-juridique  { background: #F3E5F5; }
+.s-commercial { background: #E0F7FA; }
+.s-education  { background: #FFF8E1; }
+.s-autre      { background: var(--fond2); }
 
-/* ══════════════════════════════════════
-   PAIEMENT — LOGOS SVG FIDÈLES
-══════════════════════════════════════ */
-.payment-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:14px;
-  margin-bottom:22px;
-}
+/* LIGNES RDV */
+.rdv-ligne { display: flex; align-items: center; gap: 10px;
+  padding: 11px 0; border-bottom: 1px solid var(--bord); }
+.rdv-heure { font-size: 13px; font-weight: 700; color: var(--vert); min-width: 44px; }
+.point { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.p-confirme { background: var(--vert); }
+.p-attente  { background: var(--orange); }
+.p-fait     { background: #bbb; }
+.p-annule   { background: var(--rouge); }
+.rdv-corps { flex: 1; }
+.rdv-nom  { font-size: 14px; font-weight: 600; }
+.rdv-info { font-size: 11px; color: var(--texte2); margin-top: 2px; }
+.rdv-actions { display: flex; gap: 5px; }
 
-.payment-method {
-  border:2px solid var(--border);
-  border-radius:var(--radius);
-  padding:18px 12px;
-  cursor:pointer;
-  transition:all 0.25s;
-  text-align:center;
-  position:relative;
-  background:white;
-}
-.payment-method:hover { border-color:var(--primary); box-shadow:0 4px 16px rgba(0,184,148,0.15); transform:translateY(-2px); }
-.payment-method.selected { border-color:var(--primary); background:var(--primary-light); }
+/* ONGLETS */
+.onglets { display: flex; border-bottom: 1px solid var(--bord); margin-bottom: 14px;
+  overflow-x: auto; }
+.onglet { padding: 10px 14px; font-size: 13px; border: none; background: transparent;
+  cursor: pointer; color: var(--texte2); border-bottom: 2px solid transparent;
+  white-space: nowrap; font-family: inherit; font-weight: 500; }
+.onglet.actif { color: var(--vert); border-bottom-color: var(--vert); font-weight: 700; }
 
-.pm-logo { height:52px; display:flex; align-items:center; justify-content:center; margin-bottom:10px; }
-.pm-logo svg, .pm-logo img { max-height:52px; max-width:120px; }
-.pm-name { font-size:13px; font-weight:700; color:var(--text); margin-bottom:2px; }
-.pm-num { font-size:12px; color:var(--primary); font-weight:700; }
-.pm-desc { font-size:11px; color:var(--text-light); }
+/* EN-TETE SECTION */
+.section-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.section-titre { font-size: 15px; font-weight: 700; }
 
-.pm-check {
-  position:absolute; top:8px; right:8px;
-  width:20px; height:20px; background:var(--primary);
-  border-radius:50%; display:none; align-items:center; justify-content:center;
-  color:white; font-size:11px; font-weight:700;
-}
-.payment-method.selected .pm-check { display:flex; }
+/* LOGIN */
+.login-page { display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+.login-logo { font-size: 56px; font-weight: 900; color: var(--vert); letter-spacing: -2px; }
+.login-ar   { font-size: 28px; color: var(--texte2); direction: rtl; margin-top: 4px; }
+.login-sub  { font-size: 14px; color: var(--texte2); margin: 10px 0 30px; text-align: center; line-height: 1.6; }
+.login-sec  { font-size: 11px; font-weight: 700; color: var(--texte2); text-transform: uppercase;
+  letter-spacing: 0.5px; margin-bottom: 10px; width: 100%; max-width: 460px; }
+.login-carte { background: var(--fond); border: 1px solid var(--bord); border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 8px; width: 100%; max-width: 460px;
+  display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background .1s; }
+.login-carte:hover { background: var(--fond2); }
+.avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.av-vert   { background: var(--vert-cl); color: var(--vert-tx); }
+.av-orange { background: var(--orange-cl); color: var(--orange-tx); }
+.av-rouge  { background: var(--rouge-cl); color: var(--rouge-tx); }
+.av-bleu   { background: var(--bleu-cl); color: var(--bleu-tx); }
 
-/* Cash card spécial */
-.pm-cash-icon { font-size:36px; margin-bottom:8px; }
+/* ZONE ADMIN LOGIN — intégrée dans la page, pas de prompt */
+.admin-zone { width: 100%; max-width: 460px; background: var(--fond2);
+  border-radius: 12px; padding: 16px; margin-top: 4px; }
+.champ { width: 100%; padding: 10px 12px; border: 1px solid var(--bord);
+  border-radius: 8px; font-size: 14px; font-family: inherit; background: var(--fond);
+  color: var(--texte); margin-bottom: 10px; }
+.champ:focus { outline: 2px solid var(--vert); border-color: transparent; }
+.erreur { font-size: 12px; color: var(--rouge); text-align: center; margin-top: 6px; display: none; }
 
-/* Instructions */
-.payment-instructions { background:var(--warning-light); border:1px solid rgba(253,203,110,0.4); border-radius:var(--radius); padding:18px; margin-bottom:18px; display:none; }
-.payment-instructions.active { display:block; animation:fadeDown 0.3s ease; }
-.pi-title { font-weight:700; font-size:14px; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
-.pi-step { display:flex; align-items:flex-start; gap:10px; margin-bottom:9px; font-size:13px; line-height:1.5; }
-.pi-num { width:24px; height:24px; background:var(--warning); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0; color:var(--dark); }
+/* PAYWALL */
+.paywall-page { max-width: 500px; margin: 0 auto; padding: 36px 20px; text-align: center; }
+.paiement-carte { display: flex; align-items: center; gap: 14px; padding: 13px 16px;
+  margin-bottom: 9px; border: 1px solid var(--bord); border-radius: 12px;
+  cursor: pointer; transition: all .15s; text-align: left; }
+.paiement-carte:hover { border-color: var(--vert); box-shadow: 0 0 0 3px rgba(29,158,117,.1); }
+.paiement-logo { width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; overflow: hidden; }
+.paiement-nom  { font-size: 14px; font-weight: 700; }
+.paiement-num  { font-size: 12px; color: var(--texte2); margin-top: 3px; }
+.paiement-ussd { font-size: 11px; color: var(--texte2); margin-top: 2px; }
 
-/* PLANS */
-.plan-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:18px; }
-.plan-card { border:2px solid var(--border); border-radius:var(--radius); padding:20px; cursor:pointer; transition:all 0.2s; position:relative; }
-.plan-card.selected { border-color:var(--primary); background:var(--primary-light); }
-.plan-card:hover { border-color:var(--primary); }
-.plan-popular { position:absolute; top:-9px; right:14px; background:var(--primary); color:white; font-size:10px; font-weight:700; padding:3px 10px; border-radius:10px; }
-.plan-name { font-weight:700; font-size:14px; margin-bottom:3px; }
-.plan-price { font-size:24px; font-weight:900; color:var(--primary); }
-.plan-period { font-size:11px; color:var(--text-light); margin-bottom:12px; }
-.plan-feature { font-size:12px; color:var(--text-light); padding:2px 0; }
-.plan-feature::before { content:'✓ '; color:var(--primary); font-weight:700; }
-
-/* PROGRESS */
-.progress-bar { height:5px; background:var(--border); border-radius:3px; overflow:hidden; margin-top:5px; }
-.progress-fill { height:100%; border-radius:3px; transition:width 0.5s ease; }
-
-/* CHIP */
-.chip { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:700; border:1px solid; }
-.chip-green { background:#e8f8f5; color:#00b894; border-color:rgba(0,184,148,0.2); }
-.chip-yellow { background:#fffbf0; color:#e67e22; border-color:rgba(253,203,110,0.3); }
-.chip-red { background:#fdf0ed; color:#e17055; border-color:rgba(225,112,85,0.2); }
-.chip-blue { background:#f0f7ff; color:#0984e3; border-color:rgba(9,132,227,0.2); }
-
-/* ADMIN */
-#screen-admin { background:var(--bg); }
-.admin-topbar { background:var(--dark); padding:0 20px; height:60px; display:flex; align-items:center; justify-content:space-between; }
-.admin-logo { color:var(--primary); font-size:19px; font-weight:900; }
-.admin-body { max-width:1200px; margin:0 auto; padding:24px 16px; }
-.admin-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-bottom:24px; }
-.admin-stat { background:white; border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); text-align:center; }
-.admin-stat-val { font-size:30px; font-weight:900; }
-.admin-stat-lbl { font-size:11px; color:var(--text-light); font-weight:700; }
-.toggle-switch { position:relative; display:inline-block; width:44px; height:23px; }
-.toggle-switch input { opacity:0; width:0; height:0; }
-.toggle-slider { position:absolute; cursor:pointer; inset:0; background:#ccc; border-radius:12px; transition:0.3s; }
-.toggle-slider:before { content:''; position:absolute; height:17px; width:17px; left:3px; bottom:3px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 3px rgba(0,0,0,0.2); }
-input:checked + .toggle-slider { background:var(--primary); }
-input:checked + .toggle-slider:before { transform:translateX(21px); }
-.admin-client-row { background:white; border-radius:var(--radius); padding:16px 18px; margin-bottom:10px; box-shadow:var(--shadow); display:grid; grid-template-columns:1fr auto; gap:14px; align-items:center; }
-.acr-main { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-.acr-actions { display:flex; gap:7px; flex-wrap:wrap; align-items:center; }
-.timeline { padding-left:18px; position:relative; }
-.timeline::before { content:''; position:absolute; left:6px; top:0; bottom:0; width:2px; background:var(--border); }
-.tl-item { position:relative; margin-bottom:14px; }
-.tl-dot { position:absolute; left:-15px; top:5px; width:10px; height:10px; border-radius:50%; background:var(--primary); border:2px solid white; box-shadow:0 0 0 2px var(--primary); }
-.tl-content { background:white; border-radius:8px; padding:11px 13px; font-size:13px; box-shadow:var(--shadow); }
-.tl-time { font-size:11px; color:var(--text-light); margin-top:3px; }
-
-/* BLOCKED */
-#screen-blocked { background:linear-gradient(135deg,var(--dark),var(--dark2)); flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; text-align:center; }
-.blocked-icon { font-size:64px; margin-bottom:18px; }
-.blocked-title { font-size:26px; font-weight:900; color:white; margin-bottom:10px; }
-.blocked-sub { font-size:14px; color:rgba(255,255,255,0.6); max-width:340px; margin-bottom:32px; line-height:1.7; }
-.contact-box { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:var(--radius); padding:22px 28px; margin-bottom:24px; color:white; }
-.contact-box h3 { color:var(--primary); margin-bottom:10px; }
-.contact-item { font-size:14px; margin:5px 0; }
+/* TABLEAU ADMIN */
+.tableau { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tableau th { text-align: left; padding: 9px 12px; font-size: 11px; color: var(--texte2);
+  border-bottom: 1px solid var(--bord); background: var(--fond2); font-weight: 700; }
+.tableau td { padding: 10px 12px; border-bottom: 1px solid var(--bord); vertical-align: middle; }
+.tableau tr:hover td { background: var(--fond2); }
 
 /* MODAL */
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; align-items:center; justify-content:center; padding:20px; }
-.modal-overlay.active { display:flex; }
-.modal-box { background:white; border-radius:var(--radius); padding:32px 24px; max-width:440px; width:100%; text-align:center; animation:popIn 0.3s ease; max-height:90vh; overflow-y:auto; }
-.modal-icon { font-size:48px; margin-bottom:14px; }
-.modal-title { font-size:19px; font-weight:800; margin-bottom:10px; color:var(--text); }
-.modal-desc { font-size:13px; color:var(--text-light); margin-bottom:20px; line-height:1.7; }
+.modal-fond { position: fixed; inset: 0; background: rgba(0,0,0,.45);
+  display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+.modal-boite { background: var(--fond); border-radius: 14px; padding: 24px;
+  width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+.modal-titre { font-size: 17px; font-weight: 700; margin-bottom: 18px; }
+.champ-grp { margin-bottom: 13px; }
+.champ-lbl { font-size: 12px; color: var(--texte2); margin-bottom: 5px; display: block; font-weight: 600; }
+.champ-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.vide { text-align: center; padding: 30px; color: var(--texte2); font-size: 14px; }
+.infobox { background: var(--fond2); border-radius: 10px; padding: 14px 16px;
+  font-size: 12px; color: var(--texte2); line-height: 1.8; margin-top: 16px; }
 
-/* TOAST */
-.toast-container { position:fixed; bottom:18px; right:18px; z-index:9999; display:flex; flex-direction:column; gap:7px; }
-.toast { background:var(--dark); color:white; padding:12px 16px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:var(--shadow-lg); animation:slideIn 0.3s ease; display:flex; align-items:center; gap:7px; max-width:300px; }
-.toast-success { border-left:4px solid var(--primary); }
-.toast-error { border-left:4px solid var(--danger); }
-.toast-warning { border-left:4px solid var(--warning); }
-
-/* ANIMATIONS */
-@keyframes fadeDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
-@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
-@keyframes popIn { from{opacity:0;transform:scale(0.85)} to{opacity:1;transform:scale(1)} }
-@keyframes slideIn { from{opacity:0;transform:translateX(28px)} to{opacity:1;transform:translateX(0)} }
-
-@media(max-width:768px){
-  .tabs{gap:2px} .tab{min-width:80px;font-size:11px;padding:8px 4px}
-  .form-row{grid-template-columns:1fr}
-  .admin-client-row{grid-template-columns:1fr}
-  .payment-grid{grid-template-columns:repeat(2,1fr)}
-  .plan-grid{grid-template-columns:repeat(2,1fr)}
-  .login-card{padding:28px 20px}
+@media (max-width: 560px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .champ-2 { grid-template-columns: 1fr; }
+  .tableau th:nth-child(2), .tableau td:nth-child(2) { display: none; }
 }
-@media(max-width:480px){
-  .stats-grid{grid-template-columns:1fr 1fr}
-  .payment-grid{grid-template-columns:repeat(2,1fr)}
-  .plan-grid{grid-template-columns:1fr}
-}
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 </style>
 </head>
 <body>
-
-<div class="lang-switcher" id="langSwitcher">
-  <button class="lang-btn active" onclick="setLang('fr')">FR</button>
-  <button class="lang-btn" onclick="setLang('ar')">ع</button>
-</div>
-<div class="toast-container" id="toastContainer"></div>
-<div class="modal-overlay" id="modalOverlay"><div class="modal-box" id="modalBox"></div></div>
-
-<!-- ══ LOGIN ══ -->
-<div class="screen active" id="screen-login">
-  <div class="login-card">
-    <span class="logo-text">Mawid</span>
-    <span class="logo-ar">موعد</span>
-    <span class="logo-tag" id="tag-login">Standard virtuel de rendez-vous</span>
-    <div class="login-title" id="title-login">Accéder à votre espace</div>
-    <div class="login-error" id="loginError"></div>
-    <div class="form-group">
-      <label class="form-label" id="lbl-id">Identifiant</label>
-      <input class="form-input" id="loginId" placeholder="votre-identifiant" onkeypress="if(event.key==='Enter')doLogin()">
-    </div>
-    <div class="form-group">
-      <label class="form-label" id="lbl-pwd">Mot de passe</label>
-      <input class="form-input" type="password" id="loginPwd" placeholder="••••••••" onkeypress="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="btn btn-primary btn-full" onclick="doLogin()" id="btn-login">🔓 Se connecter</button>
-    <div class="login-divider" id="lbl-or">ou</div>
-    <button class="btn btn-ghost btn-full" onclick="quickAdmin()" id="btn-admin">🛡️ Accès Administrateur</button>
-    <p style="text-align:center;margin-top:20px;font-size:12px;color:rgba(255,255,255,0.3);" id="lbl-contact">
-      Pas encore client ? Contactez-nous sur WhatsApp
-    </p>
-  </div>
-</div>
-
-<!-- ══ DASHBOARD ══ -->
-<div class="screen" id="screen-dashboard">
-  <div class="topbar">
-    <div style="display:flex;align-items:center;gap:14px;">
-      <div class="topbar-logo">Mawid</div>
-      <div class="topbar-client">
-        <strong id="topbar-name">—</strong>
-        <span id="topbar-sub">—</span>
-      </div>
-    </div>
-    <div class="topbar-right">
-      <span class="topbar-badge" id="topbar-badge"></span>
-      <button class="btn-back" onclick="logout()" id="btn-logout">⬅ Déconnexion</button>
-    </div>
-  </div>
-  <div class="dashboard-body">
-    <div id="dash-alert"></div>
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('rdv')" id="tab-rdv-btn">📅 RDV</button>
-      <button class="tab" onclick="switchTab('wa')" id="tab-wa-btn">💬 WhatsApp</button>
-      <button class="tab" onclick="switchTab('stats')" id="tab-stats-btn">📊 Stats</button>
-      <button class="tab" onclick="switchTab('pay')" id="tab-pay-btn">💳 Paiement</button>
-    </div>
-
-    <!-- RDV -->
-    <div class="tab-content active" id="tab-rdv">
-      <div class="card">
-        <div class="card-title" id="title-newrdv">➕ Nouveau rendez-vous</div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label" id="lbl-patient">Nom du patient</label><input class="form-input" id="r-nom" placeholder="Mohamed Ould Ahmed"></div>
-          <div class="form-group"><label class="form-label" id="lbl-tel">Téléphone WhatsApp</label><input class="form-input" id="r-tel" placeholder="+222 XX XX XX XX"></div>
-          <div class="form-group"><label class="form-label" id="lbl-date">Date</label><input class="form-input" type="date" id="r-date"></div>
-          <div class="form-group"><label class="form-label" id="lbl-heure">Heure</label><input class="form-input" type="time" id="r-heure"></div>
-          <div class="form-group"><label class="form-label" id="lbl-type">Type</label>
-            <select class="form-select" id="r-type">
-              <option>Consultation</option><option>Suivi</option><option>Urgence</option><option>Bilan</option><option>Autre</option>
-            </select>
-          </div>
-          <div class="form-group"><label class="form-label" id="lbl-agent">Agent / Médecin</label><input class="form-input" id="r-agent" placeholder="Dr. Nom"></div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-primary btn-sm" onclick="addRdv()" id="btn-addrdv">✅ Confirmer & WhatsApp</button>
-          <button class="btn btn-ghost-dark btn-sm" onclick="clearRdv()" id="btn-clearrdv">🗑 Effacer</button>
-        </div>
-      </div>
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
-          <div class="card-title" style="margin-bottom:0;" id="title-rdvlist">📋 Rendez-vous</div>
-          <select class="form-select" style="width:auto;padding:7px 12px;border:2px solid var(--border);border-radius:9px;" onchange="filterRdv(this.value)">
-            <option value="all" id="f-all">Tous</option>
-            <option value="confirmed" id="f-confirmed">Confirmés</option>
-            <option value="pending" id="f-pending">En attente</option>
-            <option value="done" id="f-done">Terminés</option>
-            <option value="cancelled" id="f-cancelled">Annulés</option>
-          </select>
-        </div>
-        <div class="table-wrap">
-          <table><thead><tr>
-            <th id="th-pat">Patient</th><th id="th-dt">Date & Heure</th>
-            <th id="th-typ">Type</th><th id="th-agt">Agent</th>
-            <th id="th-sta">Statut</th><th id="th-act">Actions</th>
-          </tr></thead><tbody id="rdvBody"></tbody></table>
-        </div>
-      </div>
-    </div>
-
-    <!-- WHATSAPP -->
-    <div class="tab-content" id="tab-wa">
-      <div class="card">
-        <div class="card-title" id="title-wabot">🤖 Bot WhatsApp automatique</div>
-        <p style="font-size:13px;color:var(--text-light);margin-bottom:18px;" id="desc-wa">Le bot envoie automatiquement confirmations, rappels et annulations.</p>
-        <div id="waLog" class="wa-log"></div>
-        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-primary btn-sm" onclick="simWA('confirm')" id="btn-simconf">📲 Confirmation</button>
-          <button class="btn btn-ghost-dark btn-sm" onclick="simWA('reminder')" id="btn-simrem">⏰ Rappel</button>
-          <button class="btn btn-ghost-dark btn-sm" onclick="simWA('cancel')" id="btn-simcan">❌ Annulation</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- STATS -->
-    <div class="tab-content" id="tab-stats">
-      <div class="stats-grid" id="statsGrid"></div>
-      <div class="card"><div class="card-title" id="title-topagents">🏆 Top agents</div><div id="topAgents"></div></div>
-    </div>
-
-    <!-- PAIEMENT -->
-    <div class="tab-content" id="tab-pay">
-      <div class="card" id="subCard"></div>
-      <div class="card">
-        <div class="card-title" id="title-plan">📦 Choisir un plan</div>
-        <div class="plan-grid">
-          <div class="plan-card" id="pc-starter" onclick="selectPlan('starter')">
-            <div class="plan-name">Starter</div>
-            <div class="plan-price">2 900</div>
-            <div class="plan-period" id="pp-period">MRU / mois</div>
-            <div class="plan-feature" id="pf-s1">200 RDV/mois</div>
-            <div class="plan-feature" id="pf-s2">1 utilisateur</div>
-            <div class="plan-feature">Bot WhatsApp</div>
-          </div>
-          <div class="plan-card" id="pc-pro" onclick="selectPlan('pro')" style="position:relative;">
-            <div class="plan-popular" id="pp-pop">⭐ Populaire</div>
-            <div class="plan-name">Pro</div>
-            <div class="plan-price">5 900</div>
-            <div class="plan-period">MRU / mois</div>
-            <div class="plan-feature" id="pf-p1">RDV illimités</div>
-            <div class="plan-feature" id="pf-p2">5 utilisateurs</div>
-            <div class="plan-feature" id="pf-p3">Stats avancées</div>
-          </div>
-          <div class="plan-card" id="pc-enterprise" onclick="selectPlan('enterprise')">
-            <div class="plan-name">Entreprise</div>
-            <div class="plan-price">12 900</div>
-            <div class="plan-period">MRU / mois</div>
-            <div class="plan-feature" id="pf-e1">Multi-sites</div>
-            <div class="plan-feature" id="pf-e2">Illimité</div>
-            <div class="plan-feature" id="pf-e3">API + Manager</div>
-          </div>
-        </div>
-
-        <div class="card-title" id="title-paymethod">💳 Mode de paiement</div>
-        <div class="payment-grid" id="paymentGrid">
-          <!-- Généré par JS avec logos SVG -->
-        </div>
-
-        <div class="payment-instructions" id="payInstr"></div>
-
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-primary btn-sm" onclick="sendPayWA()" id="btn-sendpay">💬 Envoyer preuve WhatsApp</button>
-          <button class="btn btn-ghost-dark btn-sm" onclick="contactMawid()" id="btn-contact">📞 Contacter Mawid</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ ADMIN ══ -->
-<div class="screen" id="screen-admin">
-  <div class="admin-topbar">
-    <div style="display:flex;align-items:center;gap:12px;">
-      <div class="admin-logo">⚙️ Mawid Admin</div>
-      <span class="chip chip-blue">Super Admin</span>
-    </div>
-    <button class="btn-back" onclick="logout()" style="color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.2);">⬅ Déconnexion</button>
-  </div>
-  <div class="admin-body">
-    <div class="admin-stats" id="adminStats"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
-      <div style="font-size:17px;font-weight:700;" id="title-clients">👥 Gestion des clients</div>
-      <button class="btn btn-primary btn-sm" onclick="toggleAddForm()">➕ Nouveau client</button>
-    </div>
-    <div class="card" id="addForm" style="display:none;">
-      <div class="card-title" id="title-addclient">✏️ Ajouter un client</div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label" id="lbl-org">Organisation</label><input class="form-input" id="n-org" placeholder="Ex: Clinique Ibn Sina"></div>
-        <div class="form-group"><label class="form-label" id="lbl-resp">Responsable</label><input class="form-input" id="n-resp" placeholder="Nom complet"></div>
-        <div class="form-group"><label class="form-label" id="lbl-atel">Téléphone</label><input class="form-input" id="n-tel" placeholder="+222 XX XX XX XX"></div>
-        <div class="form-group"><label class="form-label" id="lbl-slug">Identifiant (login)</label><input class="form-input" id="n-slug" placeholder="clinique-ibn-sina"></div>
-        <div class="form-group"><label class="form-label" id="lbl-apwd">Mot de passe</label><input class="form-input" id="n-pwd" placeholder="Mot de passe"></div>
-        <div class="form-group"><label class="form-label" id="lbl-sector">Secteur</label>
-          <select class="form-select" id="n-sector">
-            <option>Santé / Clinique</option><option>Banque / Finance</option>
-            <option>Administration</option><option>Éducation</option><option>Commerce</option><option>Autre</option>
-          </select>
-        </div>
-        <div class="form-group"><label class="form-label" id="lbl-trial">Durée essai (jours)</label><input class="form-input" type="number" id="n-trial" value="14" min="1" max="90"></div>
-        <div class="form-group"><label class="form-label" id="lbl-aplan">Plan</label>
-          <select class="form-select" id="n-plan">
-            <option value="starter">Starter — 2 900 MRU/m</option>
-            <option value="pro">Pro — 5 900 MRU/m</option>
-            <option value="enterprise">Entreprise — 12 900 MRU/m</option>
-          </select>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-primary btn-sm" onclick="createClient()" id="btn-create">✅ Créer</button>
-        <button class="btn btn-ghost-dark btn-sm" onclick="toggleAddForm()" id="btn-canceladd">Annuler</button>
-      </div>
-    </div>
-    <div id="clientList"></div>
-    <div class="card" style="margin-top:18px;">
-      <div class="card-title" id="title-log">📋 Journal</div>
-      <div class="timeline" id="adminLog"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ BLOQUÉ ══ -->
-<div class="screen" id="screen-blocked">
-  <div class="blocked-icon">🔒</div>
-  <div class="blocked-title" id="bl-title">Accès suspendu</div>
-  <div class="blocked-sub" id="bl-msg">Votre accès a expiré. Contactez Mawid pour renouveler.</div>
-  <div class="contact-box">
-    <h3>📞 Contacter Mawid</h3>
-    <div class="contact-item">📱 +222 49 03 76 62</div>
-    <div class="contact-item">✉️ contact@mawid.mr</div>
-  </div>
-  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
-    <a href="https://wa.me/22249037662" class="btn btn-primary btn-lg" style="text-decoration:none;" id="btn-wablocked">💬 WhatsApp Mawid</a>
-    <button class="btn btn-ghost btn-lg" onclick="logout()" id="btn-backblocked">⬅ Retour</button>
-  </div>
-</div>
+<div id="app"></div>
+<div id="modal"></div>
 
 <script>
-// ══════════════════════════════════════════════
-//  MAWID — CODE COMPLET
-//  Logos SVG fidèles | Paiements MR | Bilingue
-// ══════════════════════════════════════════════
+/* ================================================================
+   MAWID v3.0 — Standard Virtuel Multi-Secteurs | Mauritanie
+   Mot de passe admin : mawid2025
+================================================================ */
 
-// ── NUMÉROS DE PAIEMENT ──────────────────────
-const PAY_NUMBERS = {
-  bankily:  '49037662',
-  masrvi:   '49037662',
-  bcipay:   '32424371',
-  moov:     '49037662',
-  garza:    '49037662',
-  sedad:    '49037662',
-  especes:  ''
+// ── UTILITAIRES ──────────────────────────────────────────────────
+const jours_avant = n => { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().split('T')[0]; };
+const jours_apres = n => { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().split('T')[0]; };
+const auj = () => new Date().toISOString().split('T')[0];
+const fmt_long  = s => new Date(s + 'T12:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+const fmt_court = s => new Date(s + 'T12:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+const sec = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+let nouveau_id = 1000;
+let admin_ouvert = false;
+
+// ── SECTEURS & MOTIFS (multi-secteurs complet) ───────────────────
+const SECTEURS = {
+  medical:    { label: 'Médical',       icone: 'ti-stethoscope',    classe: 's-medical',    couleur: '#2E7D32' },
+  bancaire:   { label: 'Bancaire',      icone: 'ti-building-bank',  classe: 's-bancaire',   couleur: '#1565C0' },
+  admin:      { label: 'Administratif', icone: 'ti-building',       classe: 's-admin',      couleur: '#E65100' },
+  juridique:  { label: 'Juridique',     icone: 'ti-scale',          classe: 's-juridique',  couleur: '#6A1B9A' },
+  commercial: { label: 'Commercial',    icone: 'ti-briefcase',      classe: 's-commercial', couleur: '#00838F' },
+  education:  { label: 'Éducation',     icone: 'ti-school',         classe: 's-education',  couleur: '#F57F17' },
+  autre:      { label: 'Autre',         icone: 'ti-calendar',       classe: 's-autre',      couleur: '#555' },
 };
 
-// ── LOGOS SVG FIDÈLES ────────────────────────
+const MOTIFS = {
+  medical:    ['Consultation générale', 'Suivi médical', 'Analyse / Bilan', 'Vaccination', 'Spécialiste', 'Urgence non critique', 'Ordonnance / Renouvellement'],
+  bancaire:   ['Ouverture de compte', 'Demande de crédit', 'Virement / Transfert', 'Réclamation', 'Rendez-vous conseiller', 'Carte bancaire', 'Mise à jour dossier'],
+  admin:      ['Dépôt de dossier', 'Retrait de document', 'État civil', 'Permis / Autorisation', 'Prise en charge', 'Réunion administrative', 'Autre démarche'],
+  juridique:  ['Consultation juridique', 'Signature d\'acte', 'Audience', 'Médiation', 'Rédaction contrat', 'Conseil', 'Autre'],
+  commercial: ['Réunion client', 'Démonstration produit', 'Signature contrat', 'Suivi commande', 'Service après-vente', 'Négociation', 'Autre'],
+  education:  ['Inscription', 'Entretien / Admission', 'Réunion parents-professeurs', 'Conseil d\'orientation', 'Examen / Concours', 'Formation', 'Autre'],
+  autre:      ['Rendez-vous général', 'Entretien', 'Autre'],
+};
 
+// ── LOGOS SVG des 6 applications de paiement mauritaniennes ──────
 const LOGOS = {
-
-  // Bankily — BPM : jaune + teal, téléphone avec billets
-  bankily: `<svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg" width="110" height="55">
-    <rect x="2" y="8" width="38" height="44" rx="6" fill="#0e8fa5"/>
-    <rect x="6" y="12" width="30" height="36" rx="4" fill="#f5c518"/>
-    <text x="21" y="28" text-anchor="middle" font-size="7" font-weight="bold" fill="#0e8fa5">BPM</text>
-    <rect x="10" y="32" width="22" height="3" rx="1.5" fill="#0e8fa5" opacity="0.6"/>
-    <rect x="10" y="37" width="16" height="3" rx="1.5" fill="#0e8fa5" opacity="0.4"/>
-    <text x="75" y="26" text-anchor="middle" font-size="16" font-weight="900" fill="#0e8fa5" font-family="Arial">Bankily</text>
-    <text x="75" y="42" text-anchor="middle" font-size="11" font-weight="bold" fill="#f5c518" font-family="Arial">بنكيلي</text>
-    <text x="75" y="54" text-anchor="middle" font-size="7" fill="#0e8fa5" font-family="Arial">PAR BPM</text>
+  bankily: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:48px;display:block;border-radius:11px">
+    <rect width="48" height="48" fill="#F16522"/>
+    <text x="24" y="20" text-anchor="middle" fill="white" font-family="Arial Black,sans-serif" font-size="11" font-weight="900">BAN</text>
+    <text x="24" y="33" text-anchor="middle" fill="white" font-family="Arial Black,sans-serif" font-size="11" font-weight="900">KILY</text>
+    <rect x="8" y="38" width="32" height="3" rx="1.5" fill="white" opacity="0.3"/>
   </svg>`,
-
-  // Masrvi — cercle turquoise avec S stylisé
-  masrvi: `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="56" height="56">
-    <circle cx="30" cy="30" r="29" fill="#00d4aa"/>
-    <text x="30" y="38" text-anchor="middle" font-size="28" font-weight="900" fill="#1a1a6e" font-family="Arial">:S</text>
+  masrvi: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:48px;display:block;border-radius:11px">
+    <rect width="48" height="48" fill="#005BAC"/>
+    <text x="24" y="19" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-size="9" font-weight="700">مصرفي</text>
+    <text x="24" y="32" text-anchor="middle" fill="white" font-family="Arial Black,sans-serif" font-size="10" font-weight="900">Masrvi</text>
+    <circle cx="24" cy="40" r="2.5" fill="#4DB6FF" opacity="0.8"/>
   </svg>`,
-
-  // BCIpay — fond violet/indigo, deux cartes superposées
-  bcipay: `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="56" height="56">
-    <rect width="60" height="60" rx="12" fill="#2d2080"/>
-    <rect x="10" y="12" width="34" height="24" rx="5" fill="rgba(180,170,255,0.5)"/>
-    <rect x="16" y="22" width="34" height="24" rx="5" fill="rgba(200,195,255,0.7)"/>
-    <text x="30" y="52" text-anchor="middle" font-size="8" font-weight="bold" fill="white" font-family="Arial">BCIpay</text>
+  sedad: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:48px;display:block;border-radius:11px">
+    <rect width="48" height="48" fill="#00873E"/>
+    <text x="24" y="19" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-size="10" font-weight="700">سداد</text>
+    <text x="24" y="32" text-anchor="middle" fill="white" font-family="Arial Black,sans-serif" font-size="11" font-weight="900">SEDAD</text>
+    <path d="M10 39 Q24 36 38 39" stroke="white" stroke-width="2" fill="none" opacity="0.4" stroke-linecap="round"/>
   </svg>`,
-
-  // Moov Money — losange orange + texte bleu/orange arabe+latin
-  moov: `<svg viewBox="0 0 120 70" xmlns="http://www.w3.org/2000/svg" width="110" height="65">
-    <polygon points="60,4 116,35 60,66 4,35" fill="none" stroke="#f47920" stroke-width="4"/>
-    <line x1="82" y1="22" x2="116" y2="35" stroke="#f47920" stroke-width="3"/>
-    <line x1="82" y1="35" x2="110" y2="43" stroke="#f47920" stroke-width="2"/>
-    <line x1="82" y1="44" x2="104" y2="50" stroke="#f47920" stroke-width="1.5"/>
-    <text x="42" y="29" text-anchor="middle" font-size="11" font-weight="900" fill="#1a5fad" font-family="Arial">موف</text>
-    <text x="42" y="44" text-anchor="middle" font-size="11" font-weight="900" fill="#f47920" font-family="Arial">موني</text>
-    <text x="42" y="57" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a5fad" font-family="Arial">MOOV Money</text>
+  bcipay: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:48px;display:block;border-radius:11px">
+    <rect width="48" height="48" fill="#1B2A6B"/>
+    <rect x="7" y="7" width="34" height="34" rx="5" fill="none" stroke="#C9A84C" stroke-width="2"/>
+    <text x="24" y="23" text-anchor="middle" fill="#C9A84C" font-family="Arial Black,sans-serif" font-size="11" font-weight="900">BCI</text>
+    <text x="24" y="35" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-size="10" font-weight="700">pay</text>
   </svg>`,
-
-  // GarzaPay — fond rose fuchsia, colombe blanche
-  garza: `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="56" height="56">
-    <rect width="60" height="60" rx="12" fill="#e91e8c"/>
-    <ellipse cx="30" cy="26" rx="10" ry="7" fill="white"/>
-    <path d="M20 26 Q14 20 18 14 Q24 18 30 19" fill="white"/>
-    <path d="M40 26 Q46 20 42 14 Q36 18 30 19" fill="white"/>
-    <ellipse cx="30" cy="32" rx="5" ry="8" fill="white"/>
-    <circle cx="24" cy="22" r="2" fill="#e91e8c"/>
-    <path d="M29 34 Q27 40 24 42" stroke="white" stroke-width="1.5" fill="none"/>
-    <text x="30" y="54" text-anchor="middle" font-size="7" font-weight="bold" fill="white" font-family="Arial">GarzaPay</text>
+  gazapay: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:48px;display:block;border-radius:11px">
+    <defs><linearGradient id="gzg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00C08B"/><stop offset="100%" stop-color="#007A5A"/>
+    </linearGradient></defs>
+    <rect width="48" height="48" fill="url(#gzg)"/>
+    <text x="24" y="21" text-anchor="middle" fill="white" font-family="Arial Black,sans-serif" font-size="10" font-weight="900">GAZA</text>
+    <text x="24" y="33" text-anchor="middle" fill="white" font-family="Arial Black,sans-serif" font-size="10" font-weight="900">PAY</text>
+    <circle cx="24" cy="41" r="2.5" fill="white" opacity="0.5"/>
   </svg>`,
-
-  // Sedad Bank — vert foncé + or, texte arabe "السداد"
-  sedad: `<svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg" width="110" height="55">
-    <rect x="2" y="2" width="30" height="20" rx="3" fill="#b8960c" opacity="0.9"/>
-    <rect x="4" y="4" width="10" height="16" rx="2" fill="#d4af37"/>
-    <rect x="16" y="4" width="14" height="7" rx="1" fill="#d4af37"/>
-    <rect x="16" y="13" width="14" height="7" rx="1" fill="#d4af37"/>
-    <text x="60" y="28" text-anchor="middle" font-size="15" font-weight="900" fill="#1a6b2e" font-family="Arial">السداد</text>
-    <text x="60" y="44" text-anchor="middle" font-size="11" font-weight="700" fill="#1a2e6b" font-family="Arial">SEDAD BANK</text>
-    <text x="100" y="52" text-anchor="middle" font-size="7" fill="#1a6b2e" font-family="Arial">BY ◈</text>
+  moovmoney: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:48px;display:block;border-radius:11px">
+    <rect width="48" height="48" fill="#003087"/>
+    <rect x="0" y="31" width="48" height="17" fill="#FFD700"/>
+    <text x="24" y="23" text-anchor="middle" fill="white" font-family="Arial Black,sans-serif" font-size="9" font-weight="900">MOOV</text>
+    <text x="24" y="43" text-anchor="middle" fill="#003087" font-family="Arial Black,sans-serif" font-size="8" font-weight="900">MONEY</text>
   </svg>`,
-
-  // Espèces — main propre
-  especes: `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="56" height="56">
-    <rect width="60" height="60" rx="12" fill="#00b894"/>
-    <rect x="10" y="22" width="40" height="22" rx="4" fill="white" opacity="0.9"/>
-    <circle cx="30" cy="33" r="6" fill="#00b894"/>
-    <circle cx="30" cy="33" r="4" fill="white"/>
-    <rect x="12" y="26" width="6" height="2" rx="1" fill="#00b894" opacity="0.4"/>
-    <rect x="42" y="26" width="6" height="2" rx="1" fill="#00b894" opacity="0.4"/>
-    <text x="30" y="54" text-anchor="middle" font-size="7" font-weight="bold" fill="white" font-family="Arial">ESPÈCES</text>
-  </svg>`
 };
 
-// ── MÉTHODES DE PAIEMENT ─────────────────────
+const PAIEMENTS = [
+  { id: 'bankily',   nom: 'Bankily',    logo: 'bankily',   num: '+222 49 03 76 62', ussd: '*888#' },
+  { id: 'masrvi',    nom: 'Masrvi',     logo: 'masrvi',    num: '+222 49 03 76 62', ussd: 'Application Masrvi' },
+  { id: 'sedad',     nom: 'Sedad',      logo: 'sedad',     num: '+222 49 03 76 62', ussd: 'Application Sedad' },
+  { id: 'bcipay',    nom: 'BCIpay',     logo: 'bcipay',    num: '+222 32 42 43 71', ussd: 'Application BCIpay' },
+  { id: 'gazapay',   nom: 'Gaza Pay',   logo: 'gazapay',   num: '+222 49 03 76 62', ussd: 'Application Gaza Pay' },
+  { id: 'moovmoney', nom: 'Moov Money', logo: 'moovmoney', num: '+222 49 03 76 62', ussd: '*145#' },
+];
 
-const PAY_METHODS = {
-  fr: [
+// ── BASE DE DONNÉES DÉMO (multi-secteurs) ───────────────────────
+let BDD = {
+  clients: [
     {
-      id: 'bankily', name: 'Bankily', desc: 'BPM Orange',
-      num: PAY_NUMBERS.bankily,
-      logo: LOGOS.bankily,
-      steps: [
-        'Ouvrez l\'app <strong>Bankily</strong> sur votre téléphone',
-        `Envoi d'argent → numéro Mawid : <strong>+222 ${PAY_NUMBERS.bankily}</strong>`,
-        'Entrez le montant de votre plan',
-        'Notez votre identifiant dans la description',
-        'Prenez une capture et envoyez sur WhatsApp'
+      id: 'C001',
+      nom: 'Clinique Al Nasr',
+      contact: 'Dr. Ahmed Ould Mohamed',
+      telephone: '+222 36 12 34 56',
+      secteur: 'medical',
+      essai_debut: jours_avant(4),
+      essai_jours: 14,
+      abonnement: 'essai',
+      expiration: null,
+      rdvs: [
+        { id: 1, patient: 'Fatima Mint Sidi',    tel: '+222 36 11 22 33', date: auj(),           heure: '08:30', motif: 'Consultation générale',    statut: 'confirme', notes: '' },
+        { id: 2, patient: 'Ibrahima Ba',          tel: '+222 22 44 55 66', date: auj(),           heure: '10:00', motif: 'Suivi médical',             statut: 'attente',  notes: 'Allergie pénicilline' },
+        { id: 3, patient: 'Khadija Mint Ahmed',   tel: '',                 date: auj(),           heure: '14:30', motif: 'Vaccination',               statut: 'confirme', notes: '' },
+        { id: 4, patient: 'Cheikh Ould Sidi',     tel: '',                 date: jours_apres(1),  heure: '09:30', motif: 'Spécialiste ORL',           statut: 'attente',  notes: '' },
+        { id: 5, patient: 'Mariem Mint El Wavi',  tel: '+222 36 99 88 77', date: jours_apres(2),  heure: '11:00', motif: 'Analyse / Bilan',           statut: 'attente',  notes: '' },
       ]
     },
     {
-      id: 'masrvi', name: 'Masrvi', desc: 'Mauritel Money',
-      num: PAY_NUMBERS.masrvi,
-      logo: LOGOS.masrvi,
-      steps: [
-        'Ouvrez l\'app <strong>Masrvi</strong>',
-        `Transfert vers : <strong>+222 ${PAY_NUMBERS.masrvi}</strong>`,
-        'Montant selon votre plan choisi',
-        'Mentionnez votre identifiant',
-        'Envoyez la capture sur WhatsApp Mawid'
+      id: 'C002',
+      nom: 'BNM — Agence Ksar',
+      contact: 'M. Cheikh Ould Salem',
+      telephone: '+222 22 98 76 54',
+      secteur: 'bancaire',
+      essai_debut: jours_avant(17),
+      essai_jours: 14,
+      abonnement: 'expire',
+      expiration: null,
+      rdvs: [
+        { id: 6, patient: 'Aminetou Mint Bah',   tel: '',                 date: jours_avant(4),  heure: '09:00', motif: 'Ouverture de compte',       statut: 'fait',     notes: '' },
+        { id: 7, patient: 'Mohamed Ould Bah',     tel: '+222 22 11 22 33', date: jours_avant(2),  heure: '10:30', motif: 'Demande de crédit',         statut: 'fait',     notes: '' },
+        { id: 8, patient: 'Salma Mint Hamoud',    tel: '',                 date: auj(),           heure: '11:00', motif: 'Carte bancaire',            statut: 'attente',  notes: '' },
       ]
     },
     {
-      id: 'bcipay', name: 'BCIpay', desc: 'BCI Bank',
-      num: PAY_NUMBERS.bcipay,
-      logo: LOGOS.bcipay,
-      steps: [
-        'Ouvrez l\'app <strong>BCIpay</strong>',
-        `Transfert vers : <strong>+222 ${PAY_NUMBERS.bcipay}</strong>`,
-        'Entrez le montant exact',
-        'Ajoutez votre identifiant en note',
-        'Envoyez la confirmation sur WhatsApp'
+      id: 'C003',
+      nom: 'Cabinet Juridique Ould Salem',
+      contact: 'Me. Brahim Ould Salem',
+      telephone: '+222 44 55 66 77',
+      secteur: 'juridique',
+      essai_debut: jours_avant(22),
+      essai_jours: 14,
+      abonnement: 'actif',
+      expiration: jours_apres(28),
+      rdvs: [
+        { id: 9,  patient: 'Ahmed Ould Ahmed',    tel: '+222 36 22 33 44', date: auj(),           heure: '09:00', motif: 'Consultation juridique',    statut: 'confirme', notes: '' },
+        { id: 10, patient: 'Moussa Diallo',        tel: '',                 date: auj(),           heure: '11:30', motif: 'Signature d\'acte',         statut: 'fait',     notes: '' },
+        { id: 11, patient: 'Zeinabou Mint Seck',  tel: '+222 22 55 66 77', date: jours_apres(1),  heure: '09:00', motif: 'Rédaction contrat',         statut: 'attente',  notes: '' },
       ]
     },
     {
-      id: 'moov', name: 'Moov Money', desc: 'Chinguitel',
-      num: PAY_NUMBERS.moov,
-      logo: LOGOS.moov,
-      steps: [
-        'Ouvrez l\'app <strong>Moov Money</strong>',
-        `Envoi vers : <strong>+222 ${PAY_NUMBERS.moov}</strong>`,
-        'Saisissez le montant',
-        'Indiquez votre identifiant',
-        'Partagez le reçu sur WhatsApp'
+      id: 'C004',
+      nom: 'Préfecture de Nouakchott',
+      contact: 'M. Sidi Ould Mohamed',
+      telephone: '+222 45 12 34 56',
+      secteur: 'admin',
+      essai_debut: jours_avant(6),
+      essai_jours: 14,
+      abonnement: 'essai',
+      expiration: null,
+      rdvs: [
+        { id: 12, patient: 'Harouna Diallo',       tel: '+222 22 77 88 99', date: auj(),           heure: '08:00', motif: 'État civil',                statut: 'confirme', notes: '' },
+        { id: 13, patient: 'Ndeye Fatou Ba',        tel: '',                 date: auj(),           heure: '09:30', motif: 'Permis / Autorisation',     statut: 'attente',  notes: '' },
+        { id: 14, patient: 'Oumar Ould Sidi',       tel: '+222 36 44 55 66', date: auj(),           heure: '11:00', motif: 'Dépôt de dossier',          statut: 'confirme', notes: 'Dossier complet' },
+        { id: 15, patient: 'Khady Mint Bah',        tel: '',                 date: jours_apres(1),  heure: '10:00', motif: 'Retrait de document',       statut: 'attente',  notes: '' },
       ]
     },
     {
-      id: 'garza', name: 'GarzaPay', desc: 'Paiement mobile',
-      num: PAY_NUMBERS.garza,
-      logo: LOGOS.garza,
-      steps: [
-        'Ouvrez l\'app <strong>GarzaPay</strong>',
-        `Transfert vers : <strong>+222 ${PAY_NUMBERS.garza}</strong>`,
-        'Entrez le montant de votre abonnement',
-        'Notez votre identifiant Mawid',
-        'Envoyez la capture sur WhatsApp'
+      id: 'C005',
+      nom: 'SMCP — Agence Commerciale',
+      contact: 'Mme. Aminetou Mint Bah',
+      telephone: '+222 36 78 90 12',
+      secteur: 'commercial',
+      essai_debut: jours_avant(2),
+      essai_jours: 14,
+      abonnement: 'essai',
+      expiration: null,
+      rdvs: [
+        { id: 16, patient: 'Société Al Baraka',    tel: '+222 22 33 44 55', date: auj(),           heure: '10:00', motif: 'Négociation',               statut: 'confirme', notes: 'Contrat important' },
+        { id: 17, patient: 'Import-Export Sidi',   tel: '+222 36 55 44 33', date: auj(),           heure: '14:00', motif: 'Signature contrat',          statut: 'attente',  notes: '' },
+        { id: 18, patient: 'M. Cheikh Ould Bah',   tel: '',                 date: jours_apres(1),  heure: '09:00', motif: 'Réunion client',            statut: 'attente',  notes: '' },
       ]
     },
-    {
-      id: 'sedad', name: 'Sedad Bank', desc: 'Banque Sedad',
-      num: PAY_NUMBERS.sedad,
-      logo: LOGOS.sedad,
-      steps: [
-        'Connectez-vous à votre compte <strong>Sedad Bank</strong>',
-        `Virement vers : <strong>+222 ${PAY_NUMBERS.sedad}</strong>`,
-        'Montant selon votre plan',
-        'Motif : votre identifiant Mawid',
-        'Envoyez le reçu sur WhatsApp'
-      ]
-    },
-    {
-      id: 'especes', name: 'En main propre', desc: 'Espèces / Cash',
-      num: '',
-      logo: LOGOS.especes,
-      steps: [
-        'Contactez-nous sur <strong>WhatsApp : +222 49037662</strong>',
-        'Convenez d\'un lieu et horaire avec notre agent',
-        'Préparez le montant exact en MRU',
-        'Remettez le cash à notre représentant',
-        'Activation immédiate de votre abonnement ✅'
-      ]
-    }
   ],
-  ar: [
-    {
-      id: 'bankily', name: 'بنكيلي', desc: 'BPM Orange',
-      num: PAY_NUMBERS.bankily,
-      logo: LOGOS.bankily,
-      steps: [
-        'افتح تطبيق <strong>Bankily</strong> على هاتفك',
-        `إرسال الأموال ← رقم موعد: <strong>+222 ${PAY_NUMBERS.bankily}</strong>`,
-        'أدخل مبلغ خطتك',
-        'اذكر معرّفك في الملاحظة',
-        'التقط لقطة وأرسلها على واتساب'
-      ]
-    },
-    {
-      id: 'masrvi', name: 'مصروفي', desc: 'Mauritel Money',
-      num: PAY_NUMBERS.masrvi,
-      logo: LOGOS.masrvi,
-      steps: [
-        'افتح تطبيق <strong>Masrvi</strong>',
-        `تحويل إلى: <strong>+222 ${PAY_NUMBERS.masrvi}</strong>`,
-        'أدخل المبلغ حسب خطتك',
-        'اذكر معرّفك',
-        'أرسل لقطة التأكيد على واتساب'
-      ]
-    },
-    {
-      id: 'bcipay', name: 'BCIpay', desc: 'بنك BCI',
-      num: PAY_NUMBERS.bcipay,
-      logo: LOGOS.bcipay,
-      steps: [
-        'افتح تطبيق <strong>BCIpay</strong>',
-        `تحويل إلى: <strong>+222 ${PAY_NUMBERS.bcipay}</strong>`,
-        'أدخل المبلغ الدقيق',
-        'أضف معرّفك في الملاحظة',
-        'أرسل التأكيد على واتساب'
-      ]
-    },
-    {
-      id: 'moov', name: 'موف موني', desc: 'Chinguitel',
-      num: PAY_NUMBERS.moov,
-      logo: LOGOS.moov,
-      steps: [
-        'افتح تطبيق <strong>Moov Money</strong>',
-        `إرسال إلى: <strong>+222 ${PAY_NUMBERS.moov}</strong>`,
-        'أدخل المبلغ',
-        'اذكر معرّفك',
-        'شارك الإيصال على واتساب'
-      ]
-    },
-    {
-      id: 'garza', name: 'غرزة باي', desc: 'دفع موبايل',
-      num: PAY_NUMBERS.garza,
-      logo: LOGOS.garza,
-      steps: [
-        'افتح تطبيق <strong>GarzaPay</strong>',
-        `تحويل إلى: <strong>+222 ${PAY_NUMBERS.garza}</strong>`,
-        'أدخل مبلغ اشتراكك',
-        'اذكر معرّف موعد الخاص بك',
-        'أرسل لقطة الشاشة على واتساب'
-      ]
-    },
-    {
-      id: 'sedad', name: 'بنك السداد', desc: 'Sedad Bank',
-      num: PAY_NUMBERS.sedad,
-      logo: LOGOS.sedad,
-      steps: [
-        'سجل دخولك إلى <strong>بنك السداد</strong>',
-        `تحويل إلى: <strong>+222 ${PAY_NUMBERS.sedad}</strong>`,
-        'المبلغ حسب خطتك',
-        'السبب: معرّفك في موعد',
-        'أرسل الإيصال على واتساب'
-      ]
-    },
-    {
-      id: 'especes', name: 'نقداً', desc: 'دفع مباشر',
-      num: '',
-      logo: LOGOS.especes,
-      steps: [
-        'تواصل معنا على <strong>واتساب: +222 49037662</strong>',
-        'حدد مكاناً ووقتاً مع ممثلنا',
-        'جهّز المبلغ بالأوقية الموريتانية',
-        'سلّم النقود لممثلنا',
-        'تفعيل فوري لاشتراكك ✅'
-      ]
+  admin: { mot_de_passe: 'mawid2025' }
+};
+
+// ── ÉTAT ─────────────────────────────────────────────────────────
+let ETAT = { vue: 'login', onglet: 'aujourd_hui', utilisateur: null };
+
+// ── LOGIQUE ESSAI & ABONNEMENT ───────────────────────────────────
+function verifier_acces(client) {
+  const maintenant = new Date();
+
+  // Abonnement actif et non expiré
+  if (client.abonnement === 'actif' && client.expiration) {
+    const fin = new Date(client.expiration + 'T23:59:59');
+    if (fin > maintenant) {
+      return { type: 'actif', jours_restants: Math.ceil((fin - maintenant) / 86400000) };
     }
-  ]
-};
-
-// ── TRADUCTIONS ──────────────────────────────
-
-const T = {
-  fr: {
-    'tag-login': 'Standard virtuel de rendez-vous',
-    'title-login': 'Accéder à votre espace',
-    'lbl-id': 'Identifiant', 'lbl-pwd': 'Mot de passe',
-    'btn-login': '🔓 Se connecter', 'btn-admin': '🛡️ Accès Administrateur',
-    'lbl-or': 'ou', 'lbl-contact': 'Pas encore client ? Contactez-nous sur WhatsApp',
-    'btn-logout': '⬅ Déconnexion',
-    'tab-rdv-btn': '📅 RDV', 'tab-wa-btn': '💬 WhatsApp',
-    'tab-stats-btn': '📊 Stats', 'tab-pay-btn': '💳 Paiement',
-    'title-newrdv': '➕ Nouveau rendez-vous',
-    'lbl-patient': 'Nom du patient', 'lbl-tel': 'Téléphone WhatsApp',
-    'lbl-date': 'Date', 'lbl-heure': 'Heure', 'lbl-type': 'Type', 'lbl-agent': 'Agent / Médecin',
-    'btn-addrdv': '✅ Confirmer & WhatsApp', 'btn-clearrdv': '🗑 Effacer',
-    'title-rdvlist': '📋 Rendez-vous',
-    'f-all': 'Tous', 'f-confirmed': 'Confirmés', 'f-pending': 'En attente',
-    'f-done': 'Terminés', 'f-cancelled': 'Annulés',
-    'th-pat': 'Patient', 'th-dt': 'Date & Heure', 'th-typ': 'Type',
-    'th-agt': 'Agent', 'th-sta': 'Statut', 'th-act': 'Actions',
-    'title-wabot': '🤖 Bot WhatsApp automatique',
-    'desc-wa': 'Le bot envoie automatiquement confirmations, rappels et annulations.',
-    'btn-simconf': '📲 Confirmation', 'btn-simrem': '⏰ Rappel', 'btn-simcan': '❌ Annulation',
-    'title-topagents': '🏆 Top agents',
-    'title-plan': '📦 Choisir un plan',
-    'pp-period': 'MRU / mois', 'pp-pop': '⭐ Populaire',
-    'pf-s1': '200 RDV/mois', 'pf-s2': '1 utilisateur',
-    'pf-p1': 'RDV illimités', 'pf-p2': '5 utilisateurs', 'pf-p3': 'Stats avancées',
-    'pf-e1': 'Multi-sites', 'pf-e2': 'Illimité', 'pf-e3': 'API + Manager',
-    'title-paymethod': '💳 Mode de paiement',
-    'btn-sendpay': '💬 Envoyer preuve WhatsApp', 'btn-contact': '📞 Contacter Mawid',
-    'title-clients': '👥 Gestion des clients',
-    'title-addclient': '✏️ Ajouter un client',
-    'lbl-org': 'Organisation', 'lbl-resp': 'Responsable', 'lbl-atel': 'Téléphone',
-    'lbl-slug': 'Identifiant (login)', 'lbl-apwd': 'Mot de passe',
-    'lbl-sector': 'Secteur', 'lbl-trial': 'Durée essai (jours)', 'lbl-aplan': 'Plan',
-    'btn-create': '✅ Créer', 'btn-canceladd': 'Annuler',
-    'title-log': '📋 Journal',
-    'bl-title': 'Accès suspendu',
-    'bl-msg': 'Votre accès a expiré. Contactez Mawid pour renouveler.',
-    'btn-wablocked': '💬 WhatsApp Mawid', 'btn-backblocked': '⬅ Retour',
-    wa_confirm: r => `✅ *Rendez-vous confirmé !*\n\nBonjour *${r.nom}*,\nVotre RDV est confirmé :\n📅 ${r.date} à ${r.heure}\n🏥 ${r.type}\n👤 ${r.agent}\n\nMerci — Mawid 🌟`,
-    wa_reminder: r => `⏰ *Rappel — Demain !*\n\nBonjour *${r.nom}*,\nVous avez un RDV demain à ${r.heure}.\n\nRépondez OUI pour confirmer.`,
-    wa_cancel: r => `❌ *RDV Annulé*\n\nBonjour *${r.nom}*,\nVotre RDV du ${r.date} à ${r.heure} est annulé.\n\nContactez-nous pour un nouveau créneau.`,
-    alert_trial: j => `Période d'essai — ${j} jour${j>1?'s':''} restant${j>1?'s':''}`,
-    alert_trial_desc: d => `Essai gratuit se termine le ${d}. Souscrivez maintenant.`,
-    alert_expiry: j => `Abonnement expire dans ${j} jours`,
-    alert_active: p => `Abonnement actif — Plan ${p}`,
-    alert_active_desc: j => `Renouvellement dans ${j} jours`,
-    btn_sub: 'Souscrire →', btn_ren: 'Renouveler →',
-    s_confirmed: 'Confirmé', s_pending: 'En attente', s_cancelled: 'Annulé', s_done: 'Terminé',
-    a_confirm: 'Confirmer', a_done: 'Terminer', a_cancel: '✗', a_del: '🗑',
-    stat_today: "Aujourd'hui", stat_confirmed: 'Confirmés', stat_done: 'Terminés',
-    stat_cancelled: 'Annulés', stat_total: 'Total',
-    t_rdv: n => `RDV créé pour ${n} ✅`, t_fields: 'Remplissez tous les champs',
-    t_blocked: 'Accès bloqué', t_ok_conf: 'RDV confirmé ✅',
-    t_ok_done: 'RDV terminé', t_ok_can: 'RDV annulé', t_ok_del: 'Supprimé',
-    t_created: o => `${o} créé ✅`, t_req: 'Champs requis manquants',
-    t_dup: 'Identifiant déjà utilisé',
-    t_act: o => `${o} — Activé ✅`, t_blk: o => `${o} — Bloqué 🔒`,
-    t_en: o => `${o} — Activé`, t_sim: 'WhatsApp simulé', t_paywa: 'Ouverture WhatsApp...',
-    t_pinwrong: 'Code PIN incorrect', t_welcome: 'Bienvenue Admin 👋',
-    t_copy: '🔗 Lien copié !',
-    sub_status: 'STATUT', sub_plan: 'PLAN', sub_end: 'EXPIRE LE', sub_days: 'JOURS RESTANTS',
-    sub_active: '✅ Actif', sub_trial: '⏳ Essai', sub_blocked: '🔒 Suspendu',
-    sub_title: '💳 Mon abonnement',
-    as_total: 'Clients', as_active: 'Actifs', as_trial: 'En essai',
-    as_blocked: 'Bloqués', as_rdvs: 'RDV', as_rev: 'MRU/mois',
-    aa_ext: '+7j essai', aa_act: 'Activer 30j', aa_blk: 'Bloquer', aa_link: '🔗 Lien',
-    empty_rdv: 'Aucun rendez-vous', empty_rdv2: 'Créez votre premier RDV ci-dessus',
-    empty_ag: 'Aucune donnée', no_clients: 'Aucun client. Ajoutez votre premier client.',
-    log_start: '🚀 Mawid démarré', log_created: o => `➕ Client créé : ${o}`,
-    log_act: o => `✅ Activé : ${o}`, log_blk: o => `🔒 Bloqué : ${o}`,
-    log_en: o => `✅ Réactivé : ${o}`, log_trial: (o,j) => `⏳ +${j}j essai : ${o}`,
-    log_admin: '🔐 Connexion admin', log_exp: o => `⚠️ Expiré : ${o}`,
-    pw_instr_title: m => `Instructions — ${m}`,
-    pw_step_title: 'Étapes de paiement',
-    cred_title: 'Client créé !',
-    cred_share: 'Partagez ces informations avec votre client via WhatsApp.',
-    cred_close: 'Fermer', cred_wa: '💬 WhatsApp',
-    err_login: 'Identifiant ou mot de passe incorrect',
-    err_login_empty: 'Entrez vos identifiants'
-  },
-  ar: {
-    'tag-login': 'المنصة الافتراضية لإدارة المواعيد',
-    'title-login': 'الدخول إلى فضائك',
-    'lbl-id': 'المعرّف', 'lbl-pwd': 'كلمة المرور',
-    'btn-login': '🔓 تسجيل الدخول', 'btn-admin': '🛡️ دخول المشرف',
-    'lbl-or': 'أو', 'lbl-contact': 'لست عميلاً؟ تواصل معنا عبر واتساب',
-    'btn-logout': 'خروج ⬅',
-    'tab-rdv-btn': '📅 المواعيد', 'tab-wa-btn': '💬 واتساب',
-    'tab-stats-btn': '📊 إحصاء', 'tab-pay-btn': '💳 الدفع',
-    'title-newrdv': '➕ موعد جديد',
-    'lbl-patient': 'اسم المريض', 'lbl-tel': 'رقم واتساب',
-    'lbl-date': 'التاريخ', 'lbl-heure': 'الوقت', 'lbl-type': 'النوع', 'lbl-agent': 'الطبيب/المسؤول',
-    'btn-addrdv': '✅ تأكيد وإرسال واتساب', 'btn-clearrdv': '🗑 مسح',
-    'title-rdvlist': '📋 المواعيد',
-    'f-all': 'الكل', 'f-confirmed': 'مؤكدة', 'f-pending': 'انتظار',
-    'f-done': 'منجزة', 'f-cancelled': 'ملغاة',
-    'th-pat': 'المريض', 'th-dt': 'التاريخ والوقت', 'th-typ': 'النوع',
-    'th-agt': 'المسؤول', 'th-sta': 'الحالة', 'th-act': 'إجراءات',
-    'title-wabot': '🤖 روبوت واتساب التلقائي',
-    'desc-wa': 'يرسل الروبوت تلقائياً التأكيدات والتذكيرات والإلغاءات.',
-    'btn-simconf': '📲 تأكيد', 'btn-simrem': '⏰ تذكير', 'btn-simcan': '❌ إلغاء',
-    'title-topagents': '🏆 أفضل الأطباء',
-    'title-plan': '📦 اختر خطة',
-    'pp-period': 'أوقية / شهر', 'pp-pop': '⭐ الأكثر طلباً',
-    'pf-s1': '200 موعد/شهر', 'pf-s2': 'مستخدم واحد',
-    'pf-p1': 'مواعيد غير محدودة', 'pf-p2': '5 مستخدمين', 'pf-p3': 'إحصاء متقدم',
-    'pf-e1': 'متعدد المواقع', 'pf-e2': 'غير محدود', 'pf-e3': 'API + مدير',
-    'title-paymethod': '💳 طريقة الدفع',
-    'btn-sendpay': '💬 إرسال الإيصال واتساب', 'btn-contact': '📞 تواصل مع موعد',
-    'title-clients': '👥 إدارة العملاء',
-    'title-addclient': '✏️ إضافة عميل',
-    'lbl-org': 'المؤسسة', 'lbl-resp': 'المسؤول', 'lbl-atel': 'الهاتف',
-    'lbl-slug': 'المعرّف', 'lbl-apwd': 'كلمة المرور',
-    'lbl-sector': 'القطاع', 'lbl-trial': 'مدة التجربة (أيام)', 'lbl-aplan': 'الخطة',
-    'btn-create': '✅ إنشاء', 'btn-canceladd': 'إلغاء',
-    'title-log': '📋 السجل',
-    'bl-title': 'الوصول معلق',
-    'bl-msg': 'انتهت صلاحية وصولك. تواصل مع موعد لتجديد اشتراكك.',
-    'btn-wablocked': '💬 واتساب موعد', 'btn-backblocked': 'رجوع ⬅',
-    wa_confirm: r => `✅ *تم تأكيد الموعد!*\n\nمرحباً *${r.nom}*،\nموعدك مؤكد:\n📅 ${r.date} الساعة ${r.heure}\n🏥 ${r.type}\n👤 ${r.agent}\n\nشكراً — موعد 🌟`,
-    wa_reminder: r => `⏰ *تذكير — غداً!*\n\nمرحباً *${r.nom}*،\nموعدك غداً الساعة ${r.heure}.\n\nأجب بـ نعم للتأكيد.`,
-    wa_cancel: r => `❌ *تم الإلغاء*\n\nمرحباً *${r.nom}*،\nتم إلغاء موعدك ${r.date} الساعة ${r.heure}.\n\nتواصل معنا لموعد جديد.`,
-    alert_trial: j => `فترة التجربة — ${j} يوم متبقي`,
-    alert_trial_desc: d => `تنتهي تجربتك في ${d}. اشترك الآن.`,
-    alert_expiry: j => `ينتهي الاشتراك خلال ${j} أيام`,
-    alert_active: p => `اشتراك نشط — خطة ${p}`,
-    alert_active_desc: j => `التجديد خلال ${j} أيام`,
-    btn_sub: 'اشترك →', btn_ren: 'جدّد →',
-    s_confirmed: 'مؤكد', s_pending: 'انتظار', s_cancelled: 'ملغى', s_done: 'منجز',
-    a_confirm: 'تأكيد', a_done: 'إنجاز', a_cancel: '✗', a_del: '🗑',
-    stat_today: 'اليوم', stat_confirmed: 'مؤكدة', stat_done: 'منجزة',
-    stat_cancelled: 'ملغاة', stat_total: 'المجموع',
-    t_rdv: n => `✅ تم إنشاء موعد لـ ${n}`, t_fields: 'يرجى ملء جميع الحقول',
-    t_blocked: 'الوصول محظور', t_ok_conf: '✅ تم التأكيد',
-    t_ok_done: 'تم الإنجاز', t_ok_can: 'تم الإلغاء', t_ok_del: 'تم الحذف',
-    t_created: o => `✅ تم إنشاء: ${o}`, t_req: 'حقول مطلوبة ناقصة',
-    t_dup: 'المعرّف مستخدم بالفعل',
-    t_act: o => `✅ تم التفعيل: ${o}`, t_blk: o => `🔒 تم الحظر: ${o}`,
-    t_en: o => `✅ تم التفعيل: ${o}`, t_sim: 'تمت محاكاة واتساب', t_paywa: 'فتح واتساب...',
-    t_pinwrong: 'رمز PIN خاطئ', t_welcome: 'مرحباً بالمشرف 👋',
-    t_copy: '🔗 تم نسخ الرابط!',
-    sub_status: 'الحالة', sub_plan: 'الخطة', sub_end: 'تاريخ الانتهاء', sub_days: 'الأيام المتبقية',
-    sub_active: '✅ نشط', sub_trial: '⏳ تجربة', sub_blocked: '🔒 موقوف',
-    sub_title: '💳 اشتراكي',
-    as_total: 'العملاء', as_active: 'نشطون', as_trial: 'تجربة',
-    as_blocked: 'موقوفون', as_rdvs: 'المواعيد', as_rev: 'أوقية/شهر',
-    aa_ext: '+7 أيام', aa_act: 'تفعيل 30 يوماً', aa_blk: 'حظر', aa_link: '🔗 رابط',
-    empty_rdv: 'لا توجد مواعيد', empty_rdv2: 'أنشئ موعدك الأول',
-    empty_ag: 'لا توجد بيانات', no_clients: 'لا يوجد عملاء. أضف عميلك الأول.',
-    log_start: '🚀 تم تشغيل موعد', log_created: o => `➕ عميل جديد: ${o}`,
-    log_act: o => `✅ تفعيل: ${o}`, log_blk: o => `🔒 حظر: ${o}`,
-    log_en: o => `✅ إعادة تفعيل: ${o}`, log_trial: (o,j) => `⏳ +${j} أيام: ${o}`,
-    log_admin: '🔐 دخول المشرف', log_exp: o => `⚠️ انتهى: ${o}`,
-    pw_instr_title: m => `تعليمات — ${m}`,
-    pw_step_title: 'خطوات الدفع',
-    cred_title: 'تم إنشاء العميل!',
-    cred_share: 'شارك هذه المعلومات مع عميلك عبر واتساب.',
-    cred_close: 'إغلاق', cred_wa: '💬 واتساب',
-    err_login: 'المعرّف أو كلمة المرور غير صحيحة',
-    err_login_empty: 'أدخل بيانات الدخول'
   }
-};
 
-// ── ÉTAT ─────────────────────────────────────
-const SK = 'mawid_v4';
-let lang = 'fr';
-let currentUser = null;
-let selectedPlan = 'pro';
-let selectedPay = null;
-
-const PLANS = {
-  starter: { name:'Starter', price:2900, rdvLimit:200, users:1 },
-  pro:     { name:'Pro',     price:5900, rdvLimit:Infinity, users:5 },
-  enterprise: { name:'Entreprise', price:12900, rdvLimit:Infinity, users:Infinity }
-};
-
-const ADMIN = { id:'admin', pwd:'mawid2024' };
-
-function loadDB() {
-  try { const s=localStorage.getItem(SK); if(s) return JSON.parse(s); } catch(e){}
-  const d={ clients:[], rdvs:[], log:[] };
-  localStorage.setItem(SK, JSON.stringify(d));
-  return d;
-}
-function saveDB() { localStorage.setItem(SK, JSON.stringify(DB)); }
-let DB = loadDB();
-
-// ── LANGUE ───────────────────────────────────
-function setLang(l) {
-  lang = l;
-  const html = document.getElementById('htmlRoot');
-  html.setAttribute('lang', l);
-  html.setAttribute('dir', l==='ar'?'rtl':'ltr');
-  document.querySelectorAll('.lang-btn').forEach(b => {
-    b.classList.toggle('active', (l==='fr'&&b.textContent==='FR')||(l==='ar'&&b.textContent==='ع'));
-  });
-  applyT();
-  if (document.getElementById('paymentGrid')) renderPaymentGrid();
-}
-
-function tr(key, ...args) {
-  const v = T[lang][key];
-  if (typeof v==='function') return v(...args);
-  return v || T.fr[key] || key;
-}
-
-function applyT() {
-  Object.keys(T[lang]).forEach(k => {
-    const el = document.getElementById(k);
-    if (el && typeof T[lang][k]==='string') el.textContent = T[lang][k];
-  });
-}
-
-// ── DATES ────────────────────────────────────
-function today() { return new Date().toISOString().split('T')[0]; }
-function addDays(iso, n) { const d=new Date(iso); d.setDate(d.getDate()+n); return d.toISOString(); }
-function daysLeft(iso) { return Math.ceil((new Date(iso)-new Date())/86400000); }
-function fmtDate(iso) { if(!iso) return '—'; return new Date(iso).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'}); }
-
-// ── ACCÈS ─────────────────────────────────────
-function checkAccess(c) {
-  if (c.status==='blocked') return {ok:false, reason:'blocked'};
-  if (c.status==='trial') {
-    const end = addDays(c.trialStart, c.trialDays);
-    const left = daysLeft(end);
-    if (left<=0) { c.status='expired'; saveDB(); addLog(tr('log_exp',c.org)); return {ok:false,reason:'trial_expired'}; }
-    return {ok:true, reason:'trial', left, end};
+  // Période d'essai encore valide
+  const fin_essai = new Date(client.essai_debut + 'T00:00:00');
+  fin_essai.setDate(fin_essai.getDate() + client.essai_jours);
+  if (maintenant < fin_essai) {
+    const jours = Math.ceil((fin_essai - maintenant) / 86400000);
+    return { type: 'essai', jours_restants: jours, urgent: jours <= 3 };
   }
-  if (c.status==='expired') return {ok:false, reason:'expired'};
-  if (c.status==='active') {
-    if (c.subscriptionEnd) {
-      const left = daysLeft(c.subscriptionEnd);
-      if (left<=0) { c.status='expired'; saveDB(); addLog(tr('log_exp',c.org)); return {ok:false,reason:'expired'}; }
-      return {ok:true, reason:'active', left};
-    }
-    return {ok:true, reason:'active', left:999};
-  }
-  return {ok:false, reason:'unknown'};
+
+  // Bloqué
+  return { type: 'bloque', jours_depasses: Math.ceil((maintenant - fin_essai) / 86400000) };
 }
 
-// ── LOGIN ─────────────────────────────────────
-function doLogin() {
-  const id  = document.getElementById('loginId').value.trim().toLowerCase();
-  const pwd = document.getElementById('loginPwd').value.trim();
-  const err = document.getElementById('loginError');
-  err.style.display = 'none';
-  if (!id||!pwd) { showErr(err, tr('err_login_empty')); return; }
-  if (id===ADMIN.id && pwd===ADMIN.pwd) {
-    currentUser={type:'admin'};
-    addLog(tr('log_admin')); saveDB();
-    showScreen('screen-admin'); renderAdmin();
-    showToast(tr('t_welcome'),'success'); return;
-  }
-  const client = DB.clients.find(c=>c.slug===id&&c.pwd===pwd);
-  if (!client) { showErr(err, tr('err_login')); return; }
-  const access = checkAccess(client);
-  if (!access.ok) {
-    document.getElementById('bl-msg').textContent = tr('bl-msg');
-    showScreen('screen-blocked'); return;
-  }
-  currentUser={type:'client', clientId:client.id};
-  renderDashboard(client, access);
-  showScreen('screen-dashboard');
-}
-function quickAdmin() {
-  document.getElementById('loginId').value='admin';
-  document.getElementById('loginPwd').focus();
-}
-function showErr(el,msg) { el.textContent=msg; el.style.display='block'; }
-function logout() {
-  currentUser=null;
-  document.getElementById('loginId').value='';
-  document.getElementById('loginPwd').value='';
-  document.getElementById('loginError').style.display='none';
-  showScreen('screen-login');
+// ── AFFICHAGE PRINCIPAL ───────────────────────────────────────────
+function afficher() {
+  const app = document.getElementById('app');
+  if (ETAT.vue === 'login') { app.innerHTML = page_login(); return; }
+  if (ETAT.utilisateur?.type === 'admin') { app.innerHTML = page_admin(); return; }
+  const client = BDD.clients.find(c => c.id === ETAT.utilisateur?.id);
+  if (!client) { deconnexion(); return; }
+  const acces = verifier_acces(client);
+  if (acces.type === 'bloque') { app.innerHTML = page_paywall(client, acces); return; }
+  app.innerHTML = page_client(client, acces);
 }
 
-// ── DASHBOARD ─────────────────────────────────
-function renderDashboard(c, access) {
-  document.getElementById('topbar-name').textContent = c.org;
-  document.getElementById('topbar-sub').textContent = c.resp;
-  const badge = document.getElementById('topbar-badge');
-  if (access.reason==='trial') { badge.className='topbar-badge badge-trial'; badge.textContent=`⏳ ${access.left}j`; }
-  else { badge.className='topbar-badge badge-active'; badge.textContent=`✅ ${access.left}j`; }
-  renderAlert(c, access);
-  renderRdv(c.id);
-  renderStats(c.id);
-  renderSubCard(c);
-  renderPaymentGrid();
-  switchTab('rdv');
-}
-
-function renderAlert(c, access) {
-  const el=document.getElementById('dash-alert');
-  const plan=PLANS[c.plan]?.name||'Pro';
-  if (access.reason==='trial') {
-    const cls=access.left<=3?'alert-danger':'alert-trial';
-    const em=access.left<=3?'🚨':'⏳';
-    el.innerHTML=`<div class="alert-banner ${cls}">
-      <div class="alert-icon">${em}</div>
-      <div class="alert-content">
-        <div class="alert-title">${tr('alert_trial',access.left)}</div>
-        <div class="alert-desc">${tr('alert_trial_desc',fmtDate(access.end))}</div>
-      </div>
-      <button class="btn btn-primary btn-sm" onclick="switchTab('pay')">${tr('btn_sub')}</button>
-    </div>`;
-  } else if (access.left<=7) {
-    el.innerHTML=`<div class="alert-banner alert-trial">
-      <div class="alert-icon">⚠️</div>
-      <div class="alert-content">
-        <div class="alert-title">${tr('alert_expiry',access.left)}</div>
-        <div class="alert-desc">${tr('alert_active_desc',access.left)}</div>
-      </div>
-      <button class="btn btn-primary btn-sm" onclick="switchTab('pay')">${tr('btn_ren')}</button>
-    </div>`;
-  } else {
-    el.innerHTML=`<div class="alert-banner alert-success">
-      <div class="alert-icon">✅</div>
-      <div class="alert-content">
-        <div class="alert-title">${tr('alert_active',plan)}</div>
-        <div class="alert-desc">${tr('alert_active_desc',access.left)}</div>
-      </div>
-    </div>`;
-  }
-}
-
-// ── RDV ──────────────────────────────────────
-function renderRdv(cid, filter='all') {
-  let rdvs = DB.rdvs.filter(r=>r.clientId===cid);
-  if (filter!=='all') rdvs=rdvs.filter(r=>r.status===filter);
-  const tbody=document.getElementById('rdvBody');
-  if (!rdvs.length) {
-    tbody.innerHTML=`<tr><td colspan="6"><div style="text-align:center;padding:36px;color:var(--text-light);">
-      <div style="font-size:36px;margin-bottom:10px;">📅</div>
-      <div style="font-weight:700;">${tr('empty_rdv')}</div>
-      <div style="font-size:12px;margin-top:3px;">${tr('empty_rdv2')}</div>
-    </div></td></tr>`; return;
-  }
-  const SL={
-    confirmed:{l:tr('s_confirmed'),c:'s-confirmed'},
-    pending:{l:tr('s_pending'),c:'s-pending'},
-    cancelled:{l:tr('s_cancelled'),c:'s-cancelled'},
-    done:{l:tr('s_done'),c:'s-done'}
-  };
-  tbody.innerHTML=rdvs.map(r=>{
-    const s=SL[r.status]||{l:r.status,c:''};
-    return `<tr>
-      <td><strong>${r.nom}</strong><br><span style="font-size:11px;color:var(--text-light);">${r.tel}</span></td>
-      <td><strong>${r.date}</strong><br><span style="font-size:11px;color:var(--text-light);">${r.heure}</span></td>
-      <td>${r.type}</td><td style="font-size:12px;">${r.agent}</td>
-      <td><span class="rdv-badge ${s.c}">${s.l}</span></td>
-      <td>
-        ${r.status==='pending'?`<button class="action-btn" onclick="setStatus('${r.id}','confirmed')">${tr('a_confirm')}</button>`:''}
-        ${r.status==='confirmed'?`<button class="action-btn" onclick="setStatus('${r.id}','done')">${tr('a_done')}</button>`:''}
-        <button class="action-btn" onclick="setStatus('${r.id}','cancelled')">${tr('a_cancel')}</button>
-        <button class="action-btn del" onclick="delRdv('${r.id}')">${tr('a_del')}</button>
-      </td>
-    </tr>`;
-  }).join('');
-}
-
-function filterRdv(v) { if(currentUser?.clientId) renderRdv(currentUser.clientId,v); }
-
-function addRdv() {
-  if(!currentUser?.clientId) return;
-  const c=DB.clients.find(cl=>cl.id===currentUser.clientId);
-  if(!c) return;
-  const access=checkAccess(c);
-  if(!access.ok) { showToast(tr('t_blocked'),'error'); return; }
-  const nom=document.getElementById('r-nom').value.trim();
-  const tel=document.getElementById('r-tel').value.trim();
-  const date=document.getElementById('r-date').value;
-  const heure=document.getElementById('r-heure').value;
-  const type=document.getElementById('r-type').value;
-  const agent=document.getElementById('r-agent').value.trim();
-  if(!nom||!tel||!date||!heure) { showToast(tr('t_fields'),'error'); return; }
-  const rdv={id:'r'+Date.now(),clientId:c.id,nom,tel,date,heure,type,agent,status:'confirmed'};
-  DB.rdvs.push(rdv); saveDB();
-  renderRdv(c.id); renderStats(c.id); clearRdv();
-  addWA('confirm',rdv);
-  showToast(tr('t_rdv',nom),'success');
-}
-
-function clearRdv() {
-  ['r-nom','r-tel','r-agent'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-}
-
-function setStatus(id,s) {
-  const r=DB.rdvs.find(x=>x.id===id); if(!r) return;
-  r.status=s; saveDB();
-  renderRdv(currentUser.clientId);
-  const msgs={confirmed:tr('t_ok_conf'),done:tr('t_ok_done'),cancelled:tr('t_ok_can')};
-  showToast(msgs[s]||'✓','success');
-  if(s==='confirmed') addWA('confirm',r);
-  if(s==='cancelled') addWA('cancel',r);
-}
-
-function delRdv(id) {
-  DB.rdvs=DB.rdvs.filter(r=>r.id!==id); saveDB();
-  renderRdv(currentUser.clientId);
-  showToast(tr('t_ok_del'),'error');
-}
-
-// ── WHATSAPP ──────────────────────────────────
-function addWA(type,rdv) {
-  const log=document.getElementById('waLog'); if(!log) return;
-  const msg=tr(`wa_${type}`,rdv);
-  const now=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-  const div=document.createElement('div');
-  div.className='wa-msg';
-  div.innerHTML=`<div class="wa-icon">💬</div>
-    <div><div class="wa-bubble">${msg}</div>
-    <div class="wa-time">${now} • ${rdv.tel||'+222 49037662'}</div></div>`;
-  log.insertBefore(div,log.firstChild);
-}
-
-function simWA(type) {
-  const demo={nom:lang==='fr'?'Mohamed Ould Ahmed':'محمد ولد أحمد',
-    tel:'+222 49037662',date:today(),heure:'10:00',
-    type:lang==='fr'?'Consultation':'استشارة',agent:lang==='fr'?'Dr. Ahmed':'د. أحمد'};
-  addWA(type,demo);
-  showToast(tr('t_sim'),'success');
-}
-
-// ── STATS ─────────────────────────────────────
-function renderStats(cid) {
-  const rdvs=DB.rdvs.filter(r=>r.clientId===cid);
-  const td=rdvs.filter(r=>r.date===today());
-  const grid=document.getElementById('statsGrid'); if(!grid) return;
-  const items=[
-    {icon:'📅',bg:'#e8f8f5',v:td.length,l:tr('stat_today')},
-    {icon:'✅',bg:'#e8f8f5',v:rdvs.filter(r=>r.status==='confirmed').length,l:tr('stat_confirmed')},
-    {icon:'🏁',bg:'#f0f4ff',v:rdvs.filter(r=>r.status==='done').length,l:tr('stat_done')},
-    {icon:'❌',bg:'#fdf0ed',v:rdvs.filter(r=>r.status==='cancelled').length,l:tr('stat_cancelled')},
-    {icon:'📊',bg:'#fffbf0',v:rdvs.length,l:tr('stat_total')},
-  ];
-  grid.innerHTML=items.map(s=>`<div class="stat-card">
-    <div class="stat-icon" style="background:${s.bg};">${s.icon}</div>
-    <div class="stat-value">${s.v}</div>
-    <div class="stat-label">${s.l}</div>
-  </div>`).join('');
-  const agMap={};
-  rdvs.forEach(r=>{agMap[r.agent]=(agMap[r.agent]||0)+1;});
-  const sorted=Object.entries(agMap).sort((a,b)=>b[1]-a[1]);
-  const total=rdvs.length||1;
-  const colors=['var(--primary)','#6c5ce7','#fdcb6e'];
-  const el=document.getElementById('topAgents'); if(!el) return;
-  if(!sorted.length){el.innerHTML=`<p style="color:var(--text-light);font-size:14px;">${tr('empty_ag')}</p>`;return;}
-  el.innerHTML=sorted.map(([name,count],i)=>`
-    <div style="margin-bottom:12px;">
-      <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
-        <span style="font-size:13px;font-weight:700;">${name}</span>
-        <span style="font-size:12px;color:var(--text-light);">${count}</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" style="width:${count/total*100}%;background:${colors[i]||'var(--primary)'}"></div>
-      </div>
-    </div>`).join('');
-}
-
-// ── PAIEMENT — LOGOS SVG ─────────────────────
-function renderPaymentGrid() {
-  const grid=document.getElementById('paymentGrid'); if(!grid) return;
-  const methods=PAY_METHODS[lang]||PAY_METHODS.fr;
-  grid.innerHTML=methods.map(m=>`
-    <div class="payment-method ${selectedPay===m.id?'selected':''}" id="pm-${m.id}" onclick="selectPay('${m.id}')">
-      <div class="pm-check">✓</div>
-      <div class="pm-logo">${m.logo}</div>
-      <div class="pm-name">${m.name}</div>
-      ${m.num?`<div class="pm-num">+222 ${m.num}</div>`:''}
-      <div class="pm-desc">${m.desc}</div>
-    </div>`).join('');
-}
-
-function selectPay(id) {
-  selectedPay=id;
-  renderPaymentGrid();
-  const methods=PAY_METHODS[lang]||PAY_METHODS.fr;
-  const m=methods.find(x=>x.id===id); if(!m) return;
-  const instr=document.getElementById('payInstr');
-  instr.className='payment-instructions active';
-  instr.innerHTML=`
-    <div class="pi-title">📋 ${tr('pw_instr_title',m.name)}</div>
-    ${m.steps.map((s,i)=>`
-      <div class="pi-step">
-        <div class="pi-num">${i+1}</div>
-        <div>${s}</div>
-      </div>`).join('')}`;
-}
-
-function selectPlan(p) {
-  selectedPlan=p;
-  ['starter','pro','enterprise'].forEach(x=>{
-    document.getElementById(`pc-${x}`)?.classList.toggle('selected',x===p);
-  });
-}
-
-function sendPayWA() {
-  const plan=PLANS[selectedPlan];
-  const methods=PAY_METHODS[lang]||PAY_METHODS.fr;
-  const m=methods.find(x=>x.id===selectedPay)||{name:lang==='fr'?'non sélectionné':'غير محدد'};
-  const c=DB.clients.find(cl=>cl.id===currentUser?.clientId);
-  const msg=lang==='fr'
-    ?`Bonjour Mawid 👋\n\nJe souhaite m'abonner :\n📦 Plan : ${plan?.name} (${plan?.price?.toLocaleString()} MRU/mois)\n💳 Via : ${m.name}\n🔑 Identifiant : ${c?.slug||'?'}\n\nMerci de confirmer.`
-    :`مرحباً موعد 👋\n\nأريد الاشتراك:\n📦 الخطة: ${plan?.name} (${plan?.price?.toLocaleString()} أوقية/شهر)\n💳 عبر: ${m.name}\n🔑 المعرّف: ${c?.slug||'?'}\n\nشكراً.`;
-  window.open(`https://wa.me/22249037662?text=${encodeURIComponent(msg)}`,'_blank');
-  showToast(tr('t_paywa'),'success');
-}
-
-function contactMawid() { window.open('https://wa.me/22249037662','_blank'); }
-
-// ── ABONNEMENT ────────────────────────────────
-function renderSubCard(c) {
-  const el=document.getElementById('subCard'); if(!el) return;
-  const access=checkAccess(c);
-  const plan=PLANS[c.plan]||PLANS.starter;
-  let chip='';
-  if(c.status==='trial') chip=`<span class="chip chip-yellow">${tr('sub_trial')}</span>`;
-  else if(c.status==='active') chip=`<span class="chip chip-green">${tr('sub_active')}</span>`;
-  else chip=`<span class="chip chip-red">${tr('sub_blocked')}</span>`;
-  el.innerHTML=`
-    <div class="card-title">${tr('sub_title')}</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:14px;">
-      <div style="background:var(--bg);border-radius:10px;padding:14px;">
-        <div style="font-size:10px;color:var(--text-light);font-weight:700;margin-bottom:7px;">${tr('sub_status')}</div>${chip}
-      </div>
-      <div style="background:var(--bg);border-radius:10px;padding:14px;">
-        <div style="font-size:10px;color:var(--text-light);font-weight:700;margin-bottom:7px;">${tr('sub_plan')}</div>
-        <strong>${plan.name}</strong>
-      </div>
-      <div style="background:var(--bg);border-radius:10px;padding:14px;">
-        <div style="font-size:10px;color:var(--text-light);font-weight:700;margin-bottom:7px;">${tr('sub_end')}</div>
-        <strong>${c.subscriptionEnd?fmtDate(c.subscriptionEnd):'—'}</strong>
-      </div>
-      <div style="background:var(--bg);border-radius:10px;padding:14px;">
-        <div style="font-size:10px;color:var(--text-light);font-weight:700;margin-bottom:7px;">${tr('sub_days')}</div>
-        <strong style="font-size:20px;color:var(--primary);">${access.left||0}</strong>
-      </div>
-    </div>`;
-}
-
-// ── TABS ──────────────────────────────────────
-function switchTab(id) {
-  ['rdv','wa','stats','pay'].forEach(t=>{
-    document.getElementById(`tab-${t}-btn`)?.classList.toggle('active',t===id);
-    document.getElementById(`tab-${t}`)?.classList.toggle('active',t===id);
-  });
-  if(id==='stats'&&currentUser?.clientId) renderStats(currentUser.clientId);
-  if(id==='pay'&&currentUser?.clientId) {
-    const c=DB.clients.find(cl=>cl.id===currentUser.clientId);
-    if(c){renderSubCard(c); renderPaymentGrid();}
-  }
-}
-
-// ── ADMIN ─────────────────────────────────────
-function renderAdmin() { renderAdminStats(); renderClientList(); renderLog(); }
-
-function renderAdminStats() {
-  const el=document.getElementById('adminStats'); if(!el) return;
-  const tot=DB.clients.length;
-  const act=DB.clients.filter(c=>c.status==='active').length;
-  const tri=DB.clients.filter(c=>c.status==='trial').length;
-  const blk=DB.clients.filter(c=>c.status==='blocked'||c.status==='expired').length;
-  const rev=DB.clients.filter(c=>c.status==='active').reduce((s,c)=>s+(PLANS[c.plan]?.price||0),0);
-  el.innerHTML=[
-    {v:tot,l:tr('as_total'),c:'var(--primary)',i:'👥'},
-    {v:act,l:tr('as_active'),c:'#00b894',i:'✅'},
-    {v:tri,l:tr('as_trial'),c:'#e67e22',i:'⏳'},
-    {v:blk,l:tr('as_blocked'),c:'#e17055',i:'🔒'},
-    {v:DB.rdvs.length,l:tr('as_rdvs'),c:'#6c5ce7',i:'📅'},
-    {v:rev.toLocaleString()+' MRU',l:tr('as_rev'),c:'#00b894',i:'💰'},
-  ].map(s=>`<div class="admin-stat">
-    <div style="font-size:26px;margin-bottom:7px;">${s.i}</div>
-    <div class="admin-stat-val" style="color:${s.c};">${s.v}</div>
-    <div class="admin-stat-lbl">${s.l}</div>
-  </div>`).join('');
-}
-
-function renderClientList() {
-  const el=document.getElementById('clientList'); if(!el) return;
-  if(!DB.clients.length) {
-    el.innerHTML=`<div class="card" style="text-align:center;padding:40px;color:var(--text-light);">
-      <div style="font-size:40px;margin-bottom:12px;">👥</div>
-      <div style="font-size:15px;font-weight:700;">${tr('no_clients')}</div>
-    </div>`; return;
-  }
-  el.innerHTML=DB.clients.map(c=>{
-    const access=checkAccess(c);
-    const isOn=c.status==='active'||c.status==='trial';
-    const plan=PLANS[c.plan]?.name||'Pro';
-    let chip='';
-    if(c.status==='trial') chip=`<span class="chip chip-yellow">⏳ ${access.left||0}j</span>`;
-    else if(c.status==='active') chip=`<span class="chip chip-green">✅ ${access.left||0}j</span>`;
-    else chip=`<span class="chip chip-red">🔒</span>`;
-    const url=`${window.location.href.split('?')[0]}?login=${c.slug}`;
-    return `<div class="admin-client-row">
-      <div class="acr-main">
-        <div style="width:42px;height:42px;border-radius:11px;background:${c.color};display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:14px;flex-shrink:0;">${c.avatar}</div>
-        <div>
-          <div style="font-weight:700;font-size:14px;">${c.org}</div>
-          <div style="font-size:11px;color:var(--text-light);">${c.resp} • ${plan} • Login: <strong>${c.slug}</strong></div>
-          <div style="font-size:11px;color:var(--text-light);">📱 ${c.tel||'—'}</div>
-        </div>
-        ${chip}
-      </div>
-      <div class="acr-actions">
-        <label class="toggle-switch">
-          <input type="checkbox" ${isOn?'checked':''} onchange="toggleClient('${c.id}',this.checked)">
-          <span class="toggle-slider"></span>
-        </label>
-        <button class="action-btn" onclick="extendTrial('${c.id}',7)">${tr('aa_ext')}</button>
-        <button class="action-btn" onclick="activate('${c.id}',30)">${tr('aa_act')}</button>
-        <button class="action-btn del" onclick="blockClient('${c.id}')">${tr('aa_blk')}</button>
-        <button class="action-btn" onclick="copyLink('${url}')">${tr('aa_link')}</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function copyLink(url) {
-  navigator.clipboard?.writeText(url).then(()=>showToast(tr('t_copy'),'success'))
-  .catch(()=>prompt(lang==='fr'?'Copiez ce lien:':'انسخ هذا الرابط:',url));
-}
-
-function toggleAddForm() {
-  const f=document.getElementById('addForm');
-  f.style.display=f.style.display==='none'?'block':'none';
-  if(f.style.display==='block') f.scrollIntoView({behavior:'smooth'});
-}
-
-function createClient() {
-  const org=document.getElementById('n-org').value.trim();
-  const resp=document.getElementById('n-resp').value.trim();
-  const tel=document.getElementById('n-tel').value.trim();
-  const slug=document.getElementById('n-slug').value.trim().toLowerCase().replace(/\s+/g,'-');
-  const pwd=document.getElementById('n-pwd').value.trim();
-  const sector=document.getElementById('n-sector').value;
-  const trial=parseInt(document.getElementById('n-trial').value)||14;
-  const plan=document.getElementById('n-plan').value;
-  if(!org||!resp||!slug||!pwd){showToast(tr('t_req'),'error');return;}
-  if(DB.clients.find(c=>c.slug===slug)){showToast(tr('t_dup'),'error');return;}
-  const colors=['linear-gradient(135deg,#00b894,#00cec9)','linear-gradient(135deg,#6c5ce7,#a29bfe)','linear-gradient(135deg,#fd79a8,#e84393)','linear-gradient(135deg,#fdcb6e,#e17055)','linear-gradient(135deg,#74b9ff,#0984e3)','linear-gradient(135deg,#55efc4,#00b894)'];
-  const initials=org.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-  const client={
-    id:'c'+Date.now(), org, resp, tel, slug, pwd, sector, plan,
-    avatar:initials, color:colors[DB.clients.length%colors.length],
-    status:'trial', trialStart:new Date().toISOString(), trialDays:trial,
-    subscriptionEnd:null, createdAt:new Date().toISOString()
-  };
-  DB.clients.push(client);
-  addLog(tr('log_created',org)); saveDB();
-  showToast(tr('t_created',org),'success');
-  toggleAddForm(); renderAdmin();
-  ['n-org','n-resp','n-tel','n-slug','n-pwd'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  const nt=document.getElementById('n-trial');if(nt)nt.value='14';
-  showModal(`
-    <div class="modal-icon">✅</div>
-    <div class="modal-title">${tr('cred_title')}</div>
-    <div class="modal-desc">
-      <div style="background:var(--bg);border-radius:12px;padding:16px;text-align:left;margin-bottom:14px;">
-        <div style="margin-bottom:7px;">🏢 <strong>${org}</strong></div>
-        <div style="margin-bottom:7px;">🔑 Login : <strong>${slug}</strong></div>
-        <div style="margin-bottom:7px;">🔒 Mot de passe : <strong>${pwd}</strong></div>
-        <div style="margin-bottom:7px;">⏳ Essai : <strong>${trial} jours</strong></div>
-        <div>📦 Plan : <strong>${PLANS[plan]?.name}</strong></div>
-      </div>
-      <p style="font-size:13px;">${tr('cred_share')}</p>
+// ── PAGE LOGIN ────────────────────────────────────────────────────
+function page_login() {
+  return `
+  <div class="login-page">
+    <div class="login-logo">Mawid</div>
+    <div class="login-ar">موعد</div>
+    <div class="login-sub">
+      Standard virtuel de gestion de rendez-vous<br>
+      🇲🇷 Conçu pour la Mauritanie — Tous secteurs
     </div>
-    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-      <button class="btn btn-primary btn-sm" onclick="shareWA('${org}','${slug}','${pwd}','${trial}','${plan}')">
-        💬 ${tr('cred_wa')}
+
+    <div class="login-sec">Choisissez votre espace</div>
+
+    ${BDD.clients.map(c => {
+      const acces = verifier_acces(c);
+      const s = SECTEURS[c.secteur];
+      const av_classe = acces.type === 'bloque' ? 'av-rouge' : acces.type === 'essai' ? 'av-orange' : 'av-vert';
+      const badge_classe = acces.type === 'bloque' ? 'badge-annule' : acces.type === 'essai' ? 'badge-attente' : 'badge-confirme';
+      const badge_texte = acces.type === 'bloque'
+        ? `Bloqué (${acces.jours_depasses}j)`
+        : acces.type === 'essai'
+        ? `Essai — ${acces.jours_restants}j`
+        : `Abonné — ${acces.jours_restants}j`;
+      const initiales = c.nom.split(' ').filter(w => /^[A-ZÀ-ÜA-Z]/.test(w)).slice(0, 2).map(w => w[0]).join('') || c.nom.substring(0, 2).toUpperCase();
+      return `
+      <div class="login-carte" onclick="connexion_client('${c.id}')">
+        <div class="avatar ${av_classe}">${sec(initiales)}</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">${sec(c.nom)}</div>
+          <div style="font-size:11px;color:var(--texte2)">
+            <i class="ti ${s.icone}" style="color:${s.couleur}"></i>
+            ${s.label} · ${sec(c.contact)}
+          </div>
+        </div>
+        <span class="badge ${badge_classe}">${badge_texte}</span>
+      </div>`;
+    }).join('')}
+
+    <div class="login-sec" style="margin-top:20px">Espace Administrateur</div>
+
+    <div style="width:100%;max-width:460px">
+      <div class="login-carte" style="cursor:default" onclick="basculer_admin()">
+        <div class="avatar av-bleu">
+          <i class="ti ti-shield-lock" style="font-size:18px"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">Panneau Admin Mawid</div>
+          <div style="font-size:11px;color:var(--texte2)">Gérer abonnements · activer · suspendre</div>
+        </div>
+        <span class="badge badge-admin">Admin</span>
+      </div>
+
+      <div id="zone-admin" style="display:${admin_ouvert ? 'block' : 'none'};padding:16px;background:var(--fond2);border-radius:12px;margin-top:4px">
+        <input type="password" id="champ-mdp" class="champ"
+          placeholder="Mot de passe administrateur"
+          onkeydown="if(event.key==='Enter') connexion_admin()">
+        <button class="btn btn-vert" style="width:100%" onclick="connexion_admin()">
+          <i class="ti ti-login"></i> Se connecter
+        </button>
+        <div id="erreur-mdp" class="erreur">❌ Mot de passe incorrect. Réessayez.</div>
+      </div>
+    </div>
+
+    <p style="font-size:12px;color:var(--texte2);margin-top:24px;text-align:center;line-height:1.7">
+      Cliquez sur n'importe quel espace client pour y accéder.<br>
+      <strong>BNM Agence Ksar</strong> = essai expiré → voir la page de paiement.<br>
+      Admin → mot de passe : <strong>mawid2025</strong>
+    </p>
+  </div>`;
+}
+
+function basculer_admin() {
+  admin_ouvert = !admin_ouvert;
+  const zone = document.getElementById('zone-admin');
+  if (zone) {
+    zone.style.display = admin_ouvert ? 'block' : 'none';
+    if (admin_ouvert) {
+      setTimeout(() => {
+        const champ = document.getElementById('champ-mdp');
+        if (champ) champ.focus();
+      }, 60);
+    }
+  }
+}
+
+function connexion_admin() {
+  const champ = document.getElementById('champ-mdp');
+  const erreur = document.getElementById('erreur-mdp');
+  if (!champ) return;
+  if (champ.value === BDD.admin.mot_de_passe) {
+    admin_ouvert = false;
+    ETAT.utilisateur = { type: 'admin' };
+    afficher();
+  } else {
+    if (erreur) erreur.style.display = 'block';
+    champ.value = '';
+    champ.focus();
+  }
+}
+
+function connexion_client(id) {
+  ETAT.utilisateur = { type: 'client', id };
+  ETAT.onglet = 'aujourd_hui';
+  afficher();
+}
+
+function deconnexion() {
+  ETAT.utilisateur = null;
+  ETAT.vue = 'login';
+  admin_ouvert = false;
+  document.getElementById('modal').innerHTML = '';
+  afficher();
+}
+
+// ── PAGE PAYWALL ──────────────────────────────────────────────────
+function page_paywall(client, acces) {
+  const s = SECTEURS[client.secteur];
+  return `
+  <div class="topbar">
+    <div class="logo">Mawid <span>موعد</span></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;color:var(--texte2)">${sec(client.nom)}</span>
+      <button class="btn btn-gris btn-sm" onclick="deconnexion()">
+        <i class="ti ti-logout"></i> Déco
       </button>
-      <button class="btn btn-ghost-dark btn-sm" onclick="closeModal()">${tr('cred_close')}</button>
-    </div>`);
+    </div>
+  </div>
+
+  <div class="paywall-page">
+    <div style="font-size:50px;color:var(--rouge);margin-bottom:14px">
+      <i class="ti ti-lock"></i>
+    </div>
+    <div style="font-size:22px;font-weight:800;margin-bottom:10px">Essai terminé</div>
+    <p style="font-size:14px;color:var(--texte2);line-height:1.8;margin-bottom:22px">
+      Votre essai gratuit de <strong>${client.essai_jours} jours</strong>
+      a expiré il y a <strong>${acces.jours_depasses} jour${acces.jours_depasses > 1 ? 's' : ''}</strong>.<br>
+      Vos données et rendez-vous sont conservés en sécurité.<br>
+      Abonnez-vous pour retrouver l'accès immédiatement.
+    </p>
+
+    <div style="background:var(--vert-cl);border-radius:12px;padding:16px;margin-bottom:22px;text-align:left">
+      <div style="font-size:16px;font-weight:800;color:var(--vert-tx)">Plan Pro — 3 000 MRU / mois</div>
+      <div style="font-size:12px;color:var(--vert-f);margin-top:8px;line-height:1.8">
+        ✓ Rendez-vous illimités &nbsp;·&nbsp; ✓ Rappels WhatsApp automatiques<br>
+        ✓ Jusqu'à 5 utilisateurs &nbsp;·&nbsp; ✓ Rapports mensuels &nbsp;·&nbsp; ✓ Support prioritaire
+      </div>
+    </div>
+
+    <div style="text-align:left;font-size:13px;font-weight:700;margin-bottom:12px">
+      Payez via votre application préférée :
+    </div>
+
+    ${PAIEMENTS.map(p => `
+      <div class="paiement-carte" onclick="voir_detail_paiement('${p.id}','${client.id}')">
+        <div class="paiement-logo">${LOGOS[p.logo]}</div>
+        <div style="flex:1">
+          <div class="paiement-nom">${p.nom}</div>
+          <div class="paiement-num"><i class="ti ti-phone" style="font-size:11px"></i> ${p.num}</div>
+          <div class="paiement-ussd">${p.ussd} &nbsp;·&nbsp; Réf : MAWID-${client.id}</div>
+        </div>
+        <i class="ti ti-chevron-right" style="color:var(--texte2)"></i>
+      </div>`).join('')}
+
+    <p style="font-size:12px;color:var(--texte2);margin-top:14px;line-height:1.7">
+      Envoyez la capture du reçu sur WhatsApp au
+      <strong style="color:var(--vert)">+222 49 03 76 62</strong><br>
+      Activation de votre accès dans les <strong>2 heures</strong> (horaires de bureau).
+    </p>
+  </div>`;
 }
 
-function shareWA(org,slug,pwd,trial,plan) {
-  const pn=PLANS[plan]?.name||plan;
-  const url=window.location.href.split('?')[0];
-  const msg=lang==='fr'
-    ?`Bonjour ${org} 👋\n\nVotre espace Mawid est prêt !\n🌐 ${url}\n🔑 Identifiant : ${slug}\n🔒 Mot de passe : ${pwd}\n⏳ Essai : ${trial} jours\n📦 Plan : ${pn}\n\nPour toute question : wa.me/22249037662`
-    :`مرحباً ${org} 👋\n\nفضاؤك في موعد جاهز!\n🌐 ${url}\n🔑 المعرّف: ${slug}\n🔒 كلمة المرور: ${pwd}\n⏳ التجربة: ${trial} أيام\n📦 الخطة: ${pn}\n\nللأسئلة: wa.me/22249037662`;
-  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
-  closeModal();
+// ── PAGE CLIENT ───────────────────────────────────────────────────
+function page_client(client, acces) {
+  const t = auj();
+  const s = SECTEURS[client.secteur];
+  const rdv_auj   = client.rdvs.filter(r => r.date === t).sort((a, b) => a.heure.localeCompare(b.heure));
+  const rdv_futur = client.rdvs.filter(r => r.date > t).sort((a, b) => a.date.localeCompare(b.date) || a.heure.localeCompare(b.heure));
+  const rdv_tous  = [...client.rdvs].sort((a, b) => b.date.localeCompare(a.date) || a.heure.localeCompare(b.heure));
+
+  // Bannière essai/abonnement
+  const banniere = acces.type === 'essai' ? `
+    <div class="banniere ${acces.urgent ? 'ban-urgent' : 'ban-essai'}">
+      <div>
+        <div class="ban-titre" style="color:${acces.urgent ? 'var(--rouge-tx)' : 'var(--orange-tx)'}">
+          <i class="ti ti-clock"></i>
+          Essai gratuit — ${acces.jours_restants} jour${acces.jours_restants > 1 ? 's' : ''} restant${acces.jours_restants > 1 ? 's' : ''}
+        </div>
+        <div class="ban-sub" style="color:${acces.urgent ? 'var(--rouge)' : 'var(--orange-tx)'}">
+          ${acces.urgent
+            ? '⚠ Urgent : abonnez-vous maintenant pour ne pas perdre l\'accès !'
+            : 'Abonnez-vous avant expiration pour continuer sans interruption.'}
+        </div>
+      </div>
+      <button class="btn btn-vert btn-sm" style="white-space:nowrap"
+        onclick="modal_abonnement('${client.id}')">S'abonner</button>
+    </div>` : `
+    <div class="banniere ban-actif">
+      <div class="ban-titre" style="color:var(--vert-tx)">
+        <i class="ti ti-shield-check"></i>
+        Abonnement actif — expire dans ${acces.jours_restants} jours
+      </div>
+    </div>`;
+
+  // Ligne RDV
+  const ligne_rdv = r => {
+    const pt = { confirme: 'p-confirme', attente: 'p-attente', fait: 'p-fait', annule: 'p-annule' }[r.statut];
+    const bd = { confirme: 'badge-confirme', attente: 'badge-attente', fait: 'badge-fait', annule: 'badge-annule' }[r.statut];
+    const bt = { confirme: 'Confirmé', attente: 'En attente', fait: 'Effectué', annule: 'Annulé' }[r.statut];
+    return `
+    <div class="rdv-ligne">
+      <div class="rdv-heure">${sec(r.heure)}</div>
+      <div class="point ${pt}"></div>
+      <div class="rdv-corps">
+        <div class="rdv-nom">${sec(r.patient)}</div>
+        <div class="rdv-info">
+          ${sec(r.motif)}
+          ${r.tel ? ' · ' + sec(r.tel) : ''}
+          ${r.notes ? ' · <em>' + sec(r.notes) + '</em>' : ''}
+        </div>
+      </div>
+      <span class="badge ${bd}">${bt}</span>
+      <div class="rdv-actions">
+        <button class="btn btn-gris btn-sm" onclick="changer_statut('${client.id}',${r.id})" title="Changer statut">
+          <i class="ti ti-refresh"></i>
+        </button>
+        <button class="btn btn-gris btn-sm" onclick="modifier_rdv('${client.id}',${r.id})" title="Modifier">
+          <i class="ti ti-pencil"></i>
+        </button>
+        <button class="btn btn-gris btn-sm" onclick="supprimer_rdv('${client.id}',${r.id})" title="Supprimer">
+          <i class="ti ti-trash"></i>
+        </button>
+      </div>
+    </div>`;
+  };
+
+  // Contenu selon l'onglet actif
+  const ong = ETAT.onglet;
+  let contenu = '';
+  if (ong === 'aujourd_hui') {
+    contenu = rdv_auj.length
+      ? rdv_auj.map(ligne_rdv).join('')
+      : `<div class="vide"><i class="ti ti-calendar-off" style="font-size:30px;display:block;margin-bottom:8px"></i>Aucun rendez-vous aujourd'hui</div>`;
+  } else if (ong === 'a_venir') {
+    if (!rdv_futur.length) {
+      contenu = `<div class="vide">Aucun rendez-vous à venir</div>`;
+    } else {
+      let derniere_date = '';
+      rdv_futur.forEach(r => {
+        if (r.date !== derniere_date) {
+          contenu += `<div style="font-size:12px;font-weight:700;color:var(--texte2);padding:10px 0 5px;border-bottom:1px solid var(--bord)">${fmt_long(r.date)}</div>`;
+          derniere_date = r.date;
+        }
+        contenu += ligne_rdv(r);
+      });
+    }
+  } else {
+    contenu = rdv_tous.length
+      ? rdv_tous.map(r => {
+          const pt = { confirme: 'p-confirme', attente: 'p-attente', fait: 'p-fait', annule: 'p-annule' }[r.statut];
+          const bd = { confirme: 'badge-confirme', attente: 'badge-attente', fait: 'badge-fait', annule: 'badge-annule' }[r.statut];
+          const bt = { confirme: 'Confirmé', attente: 'En attente', fait: 'Effectué', annule: 'Annulé' }[r.statut];
+          return `
+          <div class="rdv-ligne">
+            <div style="text-align:center;min-width:50px">
+              <div style="font-size:11px;color:var(--texte2)">${fmt_court(r.date)}</div>
+              <div style="font-size:13px;font-weight:700;color:var(--vert)">${sec(r.heure)}</div>
+            </div>
+            <div class="point ${pt}"></div>
+            <div class="rdv-corps">
+              <div class="rdv-nom">${sec(r.patient)}</div>
+              <div class="rdv-info">${sec(r.motif)}</div>
+            </div>
+            <span class="badge ${bd}">${bt}</span>
+            <button class="btn btn-gris btn-sm" onclick="changer_statut('${client.id}',${r.id})">
+              <i class="ti ti-refresh"></i>
+            </button>
+          </div>`;
+        }).join('')
+      : `<div class="vide">Aucun rendez-vous</div>`;
+  }
+
+  const nb_att  = client.rdvs.filter(r => r.statut === 'attente').length;
+  const nb_conf = client.rdvs.filter(r => r.statut === 'confirme').length;
+  const nb_fait = client.rdvs.filter(r => r.statut === 'fait').length;
+
+  return `
+  <div class="topbar">
+    <div class="logo">Mawid <span>موعد</span></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:11px;color:var(--texte2);max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+        <i class="ti ${s.icone}" style="color:${s.couleur}"></i> ${sec(client.nom)}
+      </span>
+      <button class="btn btn-gris btn-sm" onclick="deconnexion()">
+        <i class="ti ti-logout"></i>
+      </button>
+    </div>
+  </div>
+
+  ${banniere}
+
+  <div class="page">
+    <div class="stats">
+      <div class="stat"><div class="stat-num">${rdv_auj.length}</div><div class="stat-lbl">Aujourd'hui</div></div>
+      <div class="stat"><div class="stat-num" style="color:var(--orange)">${nb_att}</div><div class="stat-lbl">En attente</div></div>
+      <div class="stat"><div class="stat-num">${nb_conf}</div><div class="stat-lbl">Confirmés</div></div>
+      <div class="stat"><div class="stat-num" style="color:#aaa">${nb_fait}</div><div class="stat-lbl">Effectués</div></div>
+    </div>
+
+    <div class="section-hd">
+      <div class="onglets" style="border:none;flex:1">
+        <button class="onglet ${ong === 'aujourd_hui' ? 'actif' : ''}" onclick="ETAT.onglet='aujourd_hui';afficher()">
+          Aujourd'hui (${rdv_auj.length})
+        </button>
+        <button class="onglet ${ong === 'a_venir' ? 'actif' : ''}" onclick="ETAT.onglet='a_venir';afficher()">
+          À venir (${rdv_futur.length})
+        </button>
+        <button class="onglet ${ong === 'tous' ? 'actif' : ''}" onclick="ETAT.onglet='tous';afficher()">
+          Tous (${client.rdvs.length})
+        </button>
+      </div>
+      <button class="btn btn-vert btn-sm" style="margin-left:10px;flex-shrink:0"
+        onclick="ouvrir_modal_rdv('${client.id}', null)">
+        <i class="ti ti-plus"></i> Nouveau
+      </button>
+    </div>
+
+    <div>${contenu}</div>
+  </div>`;
 }
 
-function toggleClient(id,on) {
-  const c=DB.clients.find(cl=>cl.id===id);if(!c)return;
-  if(on){c.status=c.subscriptionEnd?'active':'trial';showToast(tr('t_en',c.org),'success');addLog(tr('log_en',c.org));}
-  else{c.status='blocked';showToast(tr('t_blk',c.org),'error');addLog(tr('log_blk',c.org));}
-  saveDB(); renderAdmin();
+// ── PAGE ADMIN ────────────────────────────────────────────────────
+function page_admin() {
+  const nb_actif  = BDD.clients.filter(c => verifier_acces(c).type === 'actif').length;
+  const nb_essai  = BDD.clients.filter(c => verifier_acces(c).type === 'essai').length;
+  const nb_bloque = BDD.clients.filter(c => verifier_acces(c).type === 'bloque').length;
+  const revenu    = nb_actif * 3000;
+
+  return `
+  <div class="topbar">
+    <div class="logo">Mawid <span>موعد</span></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="badge badge-admin">Administrateur</span>
+      <button class="btn btn-gris btn-sm" onclick="deconnexion()">
+        <i class="ti ti-logout"></i> Déco
+      </button>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="stats">
+      <div class="stat"><div class="stat-num">${BDD.clients.length}</div><div class="stat-lbl">Total clients</div></div>
+      <div class="stat"><div class="stat-num">${nb_actif}</div><div class="stat-lbl">Abonnés actifs</div></div>
+      <div class="stat"><div class="stat-num" style="color:var(--orange)">${nb_essai}</div><div class="stat-lbl">En essai</div></div>
+      <div class="stat"><div class="stat-num" style="color:var(--rouge)">${nb_bloque}</div><div class="stat-lbl">Bloqués</div></div>
+    </div>
+
+    <div class="section-hd" style="margin-bottom:14px">
+      <div class="section-titre">Gestion des clients</div>
+      <div style="background:var(--vert-cl);color:var(--vert-tx);padding:6px 14px;border-radius:8px;font-size:13px;font-weight:700">
+        <i class="ti ti-cash"></i> ${revenu.toLocaleString('fr-FR')} MRU/mois
+      </div>
+    </div>
+
+    <div style="overflow-x:auto">
+      <table class="tableau">
+        <thead>
+          <tr>
+            <th>Client / Secteur</th>
+            <th>Téléphone</th>
+            <th>Statut</th>
+            <th>Expiration</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${BDD.clients.map(c => {
+            const acces = verifier_acces(c);
+            const s = SECTEURS[c.secteur];
+            const badge_cl = acces.type === 'bloque' ? 'badge-annule' : acces.type === 'essai' ? 'badge-attente' : 'badge-confirme';
+            const badge_tx = acces.type === 'bloque'
+              ? `Bloqué (${acces.jours_depasses}j)`
+              : acces.type === 'essai'
+              ? `Essai — ${acces.jours_restants}j`
+              : `Actif — ${acces.jours_restants}j`;
+            const exp = c.expiration ? c.expiration.replace(/-/g, '/') : acces.type === 'bloque' ? 'Essai expiré' : 'En cours d\'essai';
+            return `
+            <tr>
+              <td>
+                <div style="font-weight:700">${sec(c.nom)}</div>
+                <div style="font-size:11px;color:var(--texte2)">
+                  <i class="ti ${s.icone}" style="color:${s.couleur}"></i> ${s.label} · ${sec(c.contact)}
+                </div>
+              </td>
+              <td>${sec(c.telephone)}</td>
+              <td><span class="badge ${badge_cl}">${badge_tx}</span></td>
+              <td style="font-size:11px;color:var(--texte2)">${exp}</td>
+              <td>
+                <div style="display:flex;gap:5px;flex-wrap:wrap">
+                  ${acces.type !== 'actif' ? `
+                    <button class="btn btn-ok btn-sm" onclick="admin_activer('${c.id}', 30)">
+                      <i class="ti ti-check"></i> Activer 30j
+                    </button>` : ''}
+                  ${acces.type === 'actif' ? `
+                    <button class="btn btn-non btn-sm" onclick="admin_suspendre('${c.id}')">
+                      <i class="ti ti-ban"></i> Suspendre
+                    </button>` : ''}
+                  <button class="btn btn-gris btn-sm" onclick="admin_prolonger('${c.id}')">
+                    +7j essai
+                  </button>
+                </div>
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="infobox">
+      <strong>Logique automatique de contrôle d'accès :</strong><br>
+      • <strong>Essai actif</strong> → accès complet + bannière compte à rebours (rouge si ≤ 3 jours).<br>
+      • <strong>Essai expiré + non payé</strong> → accès bloqué automatiquement → page paywall avec les 6 apps de paiement mauritaniennes.<br>
+      • <strong>Abonnement actif</strong> → accès total jusqu'à la date d'expiration.<br>
+      • <strong>Abonnement expiré</strong> → même blocage que l'essai expiré.<br>
+      • <strong>"Activer 30j"</strong> → simule la confirmation de paiement reçu.
+    </div>
+  </div>`;
 }
 
-function extendTrial(id,days) {
-  const c=DB.clients.find(cl=>cl.id===id);if(!c)return;
-  c.trialDays=(c.trialDays||14)+days;
-  if(c.status==='expired')c.status='trial';
-  showToast(tr('t_act',c.org),'success');addLog(tr('log_trial',c.org,days));
-  saveDB();renderAdmin();
+// ── ACTIONS ADMIN ─────────────────────────────────────────────────
+function admin_activer(id, jours) {
+  const c = BDD.clients.find(x => x.id === id);
+  c.abonnement = 'actif';
+  c.expiration = jours_apres(jours);
+  afficher();
+}
+function admin_suspendre(id) {
+  if (!confirm('Suspendre l\'accès de ce client ?')) return;
+  const c = BDD.clients.find(x => x.id === id);
+  c.abonnement = 'expire';
+  c.expiration = null;
+  afficher();
+}
+function admin_prolonger(id) {
+  BDD.clients.find(x => x.id === id).essai_jours += 7;
+  afficher();
 }
 
-function activate(id,days) {
-  const c=DB.clients.find(cl=>cl.id===id);if(!c)return;
-  const e=new Date();e.setDate(e.getDate()+days);
-  c.subscriptionEnd=e.toISOString();c.status='active';
-  showToast(tr('t_act',c.org),'success');addLog(tr('log_act',c.org));
-  saveDB();renderAdmin();
+// ── ACTIONS RDV ───────────────────────────────────────────────────
+function changer_statut(cid, rid) {
+  const r = BDD.clients.find(x => x.id === cid).rdvs.find(x => x.id === rid);
+  const cycle = { confirme: 'attente', attente: 'fait', fait: 'annule', annule: 'confirme' };
+  r.statut = cycle[r.statut];
+  afficher();
+}
+function supprimer_rdv(cid, rid) {
+  if (!confirm('Supprimer ce rendez-vous ?')) return;
+  const c = BDD.clients.find(x => x.id === cid);
+  c.rdvs = c.rdvs.filter(x => x.id !== rid);
+  afficher();
+}
+function modifier_rdv(cid, rid) {
+  ouvrir_modal_rdv(cid, rid);
 }
 
-function blockClient(id) {
-  const c=DB.clients.find(cl=>cl.id===id);if(!c)return;
-  c.status='blocked';showToast(tr('t_blk',c.org),'error');addLog(tr('log_blk',c.org));
-  saveDB();renderAdmin();
+// ── MODAL NOUVEAU / MODIFIER RDV ─────────────────────────────────
+function ouvrir_modal_rdv(cid, rid) {
+  const client = BDD.clients.find(x => x.id === cid);
+  const rdv = rid != null ? client.rdvs.find(x => x.id === rid) : null;
+  const s = SECTEURS[client.secteur];
+  const motifs = MOTIFS[client.secteur] || MOTIFS.autre;
+
+  document.getElementById('modal').innerHTML = `
+  <div class="modal-fond" onclick="if(event.target===this) fermer_modal()">
+    <div class="modal-boite">
+      <div class="modal-titre">
+        <i class="ti ${s.icone}" style="color:${s.couleur}"></i>
+        ${rdv ? 'Modifier le' : 'Nouveau'} rendez-vous
+        <span style="font-size:12px;font-weight:400;color:var(--texte2);margin-left:6px">${sec(client.nom)}</span>
+      </div>
+
+      <div class="champ-2">
+        <div class="champ-grp">
+          <label class="champ-lbl">Nom du patient / client *</label>
+          <input class="champ" id="f-nom" value="${rdv ? sec(rdv.patient) : ''}" placeholder="Ex: Fatima Mint Sidi">
+        </div>
+        <div class="champ-grp">
+          <label class="champ-lbl">Téléphone</label>
+          <input class="champ" id="f-tel" value="${rdv ? sec(rdv.tel) : ''}" placeholder="+222 XX XX XX XX">
+        </div>
+      </div>
+
+      <div class="champ-2">
+        <div class="champ-grp">
+          <label class="champ-lbl">Date *</label>
+          <input type="date" class="champ" id="f-date" value="${rdv ? rdv.date : auj()}">
+        </div>
+        <div class="champ-grp">
+          <label class="champ-lbl">Heure *</label>
+          <input type="time" class="champ" id="f-heure" value="${rdv ? rdv.heure : '09:00'}">
+        </div>
+      </div>
+
+      <div class="champ-grp">
+        <label class="champ-lbl">Motif</label>
+        <select class="champ" id="f-motif">
+          ${motifs.map(m => `<option value="${sec(m)}" ${rdv && rdv.motif === m ? 'selected' : ''}>${sec(m)}</option>`).join('')}
+          <option value="autre" ${rdv && !motifs.includes(rdv.motif) ? 'selected' : ''}>Autre (préciser dans notes)</option>
+        </select>
+      </div>
+
+      <div class="champ-grp">
+        <label class="champ-lbl">Statut</label>
+        <select class="champ" id="f-statut">
+          <option value="attente"  ${rdv && rdv.statut === 'attente'  ? 'selected' : ''}>En attente</option>
+          <option value="confirme" ${!rdv || rdv.statut === 'confirme' ? 'selected' : ''}>Confirmé</option>
+          <option value="fait"     ${rdv && rdv.statut === 'fait'     ? 'selected' : ''}>Effectué</option>
+          <option value="annule"   ${rdv && rdv.statut === 'annule'   ? 'selected' : ''}>Annulé</option>
+        </select>
+      </div>
+
+      <div class="champ-grp">
+        <label class="champ-lbl">Notes / Observations</label>
+        <textarea class="champ" id="f-notes" rows="2"
+          placeholder="Informations complémentaires...">${rdv ? sec(rdv.notes) : ''}</textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
+        <button class="btn btn-gris" onclick="fermer_modal()">Annuler</button>
+        <button class="btn btn-vert" onclick="sauvegarder_rdv('${cid}', ${rid ?? 'null'})">
+          <i class="ti ti-check"></i> ${rdv ? 'Enregistrer' : 'Ajouter le RDV'}
+        </button>
+      </div>
+    </div>
+  </div>`;
+
+  setTimeout(() => document.getElementById('f-nom')?.focus(), 80);
 }
 
-function addLog(msg) {
-  DB.log.push({msg,time:new Date().toLocaleTimeString('fr-FR')});
-  if(DB.log.length>100)DB.log.shift();
+function sauvegarder_rdv(cid, rid) {
+  const nom   = document.getElementById('f-nom').value.trim();
+  const date  = document.getElementById('f-date').value;
+  const heure = document.getElementById('f-heure').value;
+  if (!nom || !date || !heure) {
+    alert('Veuillez remplir les champs obligatoires (*).');
+    return;
+  }
+  const client = BDD.clients.find(x => x.id === cid);
+  const donnees = {
+    patient: nom,
+    tel:     document.getElementById('f-tel').value.trim(),
+    date, heure,
+    motif:   document.getElementById('f-motif').value,
+    statut:  document.getElementById('f-statut').value,
+    notes:   document.getElementById('f-notes').value.trim(),
+  };
+  if (rid != null) {
+    Object.assign(client.rdvs.find(x => x.id === rid), donnees);
+  } else {
+    client.rdvs.push({ id: nouveau_id++, ...donnees });
+  }
+  fermer_modal();
+  afficher();
 }
 
-function renderLog() {
-  const el=document.getElementById('adminLog');if(!el)return;
-  if(!DB.log.length){el.innerHTML=`<p style="color:var(--text-light);font-size:13px;">${lang==='fr'?'Aucune action.':'لا توجد أحداث.'}</p>`;return;}
-  el.innerHTML=[...DB.log].reverse().slice(0,20).map(l=>`
-    <div class="tl-item">
-      <div class="tl-dot"></div>
-      <div class="tl-content">${l.msg}<div class="tl-time">${l.time}</div></div>
-    </div>`).join('');
+// ── MODAL PAIEMENT ────────────────────────────────────────────────
+function voir_detail_paiement(pid, ref) {
+  const p = PAIEMENTS.find(x => x.id === pid);
+  document.getElementById('modal').innerHTML = `
+  <div class="modal-fond" onclick="if(event.target===this) fermer_modal()">
+    <div class="modal-boite" style="max-width:400px;text-align:center">
+      <div style="display:flex;justify-content:center;margin-bottom:14px">${LOGOS[p.logo]}</div>
+      <div style="font-size:19px;font-weight:800;margin-bottom:4px">Payer via ${p.nom}</div>
+      <div style="font-size:13px;color:var(--texte2);margin-bottom:18px">${p.ussd}</div>
+      <div style="background:var(--fond2);border-radius:10px;padding:16px;margin-bottom:16px;text-align:left">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px">Instructions de paiement</div>
+        <div style="font-size:14px;line-height:2.3">
+          1. Ouvrez <strong>${p.nom}</strong><br>
+          2. Choisissez <strong>Envoi / Transfert</strong><br>
+          3. Numéro : <strong style="color:var(--vert);font-size:16px">${p.num}</strong><br>
+          4. Montant : <strong>3 000 MRU</strong><br>
+          5. Référence : <strong style="color:var(--vert)">MAWID-${ref}</strong>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--texte2);line-height:1.7;margin-bottom:18px">
+        Envoyez la capture du reçu sur WhatsApp au<br>
+        <strong style="color:var(--vert);font-size:14px">+222 49 03 76 62</strong><br>
+        Activation dans les <strong>2 heures</strong> (horaires de bureau).
+      </p>
+      <button class="btn btn-vert" style="width:100%;margin-bottom:8px" onclick="fermer_modal()">
+        <i class="ti ti-check"></i> Compris — J'ai payé
+      </button>
+      <button class="btn btn-gris" style="width:100%" onclick="fermer_modal()">Retour</button>
+    </div>
+  </div>`;
 }
 
-// ── MODAL & TOAST ─────────────────────────────
-function showModal(html) { document.getElementById('modalBox').innerHTML=html; document.getElementById('modalOverlay').classList.add('active'); }
-function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
-document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
-
-function showToast(msg,type='success') {
-  const c=document.getElementById('toastContainer');
-  const el=document.createElement('div');
-  const icons={success:'✅',error:'❌',warning:'⚠️'};
-  el.className=`toast toast-${type}`;
-  el.innerHTML=`<span>${icons[type]||''}</span> ${msg}`;
-  c.appendChild(el);
-  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity 0.3s';setTimeout(()=>el.remove(),300);},3500);
+function modal_abonnement(cid) {
+  const client = BDD.clients.find(x => x.id === cid);
+  document.getElementById('modal').innerHTML = `
+  <div class="modal-fond" onclick="if(event.target===this) fermer_modal()">
+    <div class="modal-boite">
+      <div class="modal-titre"><i class="ti ti-credit-card"></i> S'abonner à Mawid</div>
+      <div style="background:var(--vert-cl);border-radius:10px;padding:14px 16px;margin-bottom:18px">
+        <div style="font-size:15px;font-weight:800;color:var(--vert-tx)">Plan Pro — 3 000 MRU / mois</div>
+        <div style="font-size:12px;color:var(--vert-f);margin-top:6px;line-height:1.7">
+          ✓ RDV illimités &nbsp;·&nbsp; ✓ WhatsApp automatique &nbsp;·&nbsp; ✓ 5 utilisateurs &nbsp;·&nbsp; ✓ Support prioritaire
+        </div>
+      </div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px">Choisissez votre app de paiement :</div>
+      ${PAIEMENTS.map(p => `
+        <div class="paiement-carte" onclick="fermer_modal();voir_detail_paiement('${p.id}','${client.id}')">
+          <div class="paiement-logo">${LOGOS[p.logo]}</div>
+          <div style="flex:1">
+            <div class="paiement-nom">${p.nom}</div>
+            <div class="paiement-num">${p.num}</div>
+          </div>
+          <i class="ti ti-chevron-right" style="color:var(--texte2)"></i>
+        </div>`).join('')}
+      <button class="btn btn-gris" style="width:100%;margin-top:12px" onclick="fermer_modal()">Annuler</button>
+    </div>
+  </div>`;
 }
 
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function fermer_modal() {
+  document.getElementById('modal').innerHTML = '';
 }
 
-// ── AUTO-CHECK ────────────────────────────────
-setInterval(()=>{
-  let changed=false;
-  DB.clients.forEach(c=>{const prev=c.status;checkAccess(c);if(prev!==c.status)changed=true;});
-  if(changed)saveDB();
-},60000);
-
-// ── URL PARAMS ────────────────────────────────
-function checkURL() {
-  const p=new URLSearchParams(window.location.search);
-  const l=p.get('login');
-  if(l){document.getElementById('loginId').value=l;document.getElementById('loginPwd').focus();}
-}
-
-// ── INIT ──────────────────────────────────────
-function init() {
-  const td=today();
-  document.querySelectorAll('input[type="date"]').forEach(e=>{e.min=td;e.value=td;});
-  const now=new Date();
-  const hhmm=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  document.querySelectorAll('input[type="time"]').forEach(e=>{e.value=hhmm;});
-  setLang('fr');
-  checkURL();
-  addLog(tr('log_start')); saveDB();
-  showScreen('screen-login');
-}
-
-init();
+// ── DÉMARRAGE ─────────────────────────────────────────────────────
+afficher();
 </script>
 </body>
 </html>
